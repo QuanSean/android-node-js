@@ -4,7 +4,8 @@ const PostSchema = mongoose.Schema({
     email:String,
     password: String,
     fullname: String,
-    delete: Boolean
+    token:String,
+    deleted: Boolean
 });
 
 module.exports=mongoose.model ('User',PostSchema);
