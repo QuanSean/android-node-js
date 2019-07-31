@@ -8,6 +8,7 @@ import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -83,11 +84,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         compositeDisposable.add(iMyService.loginUser(email,password)
-        .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {
                     @Override
                     public void accept(String response) throws Exception {
+                        Log.d("abc", "-----------respone: "+response);
                         Toast.makeText(MainActivity.this,"" +response,Toast.LENGTH_LONG).show();
                     }
                 }));
