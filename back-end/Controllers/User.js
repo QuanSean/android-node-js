@@ -64,6 +64,11 @@ let user={
           callback(err, null);
         }
       })
+    },
+    logout: async (token, callback) => {
+      User.findOneAndUpdate({
+        "token": token
+      }, { "token": "" }, callback);
     }
 }
 module.exports=user

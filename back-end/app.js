@@ -25,4 +25,14 @@ mongoose.connect (process.env.DB_CONNECTION,{ useNewUrlParser: true },(err, succ
 });
 // DB_CONNECTION=mongodb+srv://quansean:150598bd!@tesa-e6rwo.mongodb.net/test?retryWrites=true&w=majority
 
-app.listen(3000);
+app.listen(3000,(err, success)=>{
+    if (err)
+    {
+        console.log (err)
+    }
+    else 
+    {
+        console.log ("Listen 3000")
+    }
+
+});
