@@ -3,6 +3,8 @@ package com.huypo.tase.Activity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.huypo.tase.R;
+
 public class DashBoard extends AppCompatActivity {
 
     @Override
