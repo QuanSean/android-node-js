@@ -5,14 +5,12 @@ const bodyParser = require("body-parser");
 require("dotenv/config");
 
 //Routes
-app.use (bodyParser.json());
-
-const postRoute = require ('./routes/user');
-app.use ("/user", postRoute);
-
 app.use(bodyParser.json());
 
+const postRoute = require("./routes/user");
+app.use("/user", postRoute);
 
+app.use(bodyParser.json());
 
 //Connect Db
 
@@ -30,16 +28,10 @@ mongoose.connect(
   }
 );
 
-app.listen(3000,(err, success)=>{
-    if (err)
-    {
-        console.log (err)
-    }
-    else 
-    {
-        console.log ("Listen sss")
-    }
-
+app.listen(3000, (err, success) => {
+  if (err) {
+    console.log(err);
+  } else {
+    console.log("Listen sss");
+  }
 });
-
-
