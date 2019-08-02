@@ -3,7 +3,9 @@ const router = express.Router();
 const user = require ('../Controllers/User');
 const Project= require('../Model/Project');
 const Utility = require('../Common/utility.js')
+let crypto = require("crypto");
 
+const UserModel = require ('../Model/User');
 
 router
   //verify data before call this api
@@ -45,18 +47,39 @@ router
     })
   })
   .post("/logout", (req, res, next) => {
-    user.logout(req.headers.token, (error, result) => {
-      // console.log(error +  " "+result);
-      if (error || !result) {
-        res.status(404).send({
-          result: false
-        });
-      } else {
-        res.status(200).send({
-          result: true
-        });
-      }
-    })
+    // user.logout(req.headers.token, (error, result) => {
+    //   // console.log(error +  " "+result);
+    //   if (error || !result) {
+    //     res.status(404).send({
+    //       result: false
+    //     });
+    //   } else {
+    //     res.status(200).send({
+    //       result: true
+    //     });
+    //   }
+    // })
+    UserModel.findOneAndUpdate({"token":req.headers.token},({"token":""}))
+  })
+    //demo
+  .get("/info",async(req, res, next)=>{
+    if(req.headers.token){
+      Utility.verifyToken(req.headers.token, (err, user) => {
+        user = user._doc;
+        console.log (user)
+        if (user) {
+          res.status(201).json({
+
+            info: user
+          })
+        } else {
+          res.status(401).send({
+            result: false
+          })
+        }
+      });
+    }
+
   })
   .post("/verify", async (req, res, next) => {
     if(req.headers.token){
@@ -77,57 +100,77 @@ router
       });
     }
   })
-  .get("/info", async (req, res, next) => {
-    let verifyToken = await Utility.verifyToken(req.headers.token);
-    if (verifyToken) {
-      res.status(200).json({
-        result: true,
-        detail: verifyToken
-      });
-    } else {
-      res.status(401).send({
-        result: false,
-        detail: "UnAuthorized"
-      });
-    }
-  })
-  .post("/info", async (req, res, next) => {
-    let verifyToken = await Utility.verifyToken(req.headers.token);
-    if (verifyToken) {
-      user.update(req.body, (err, updated) => {
-        if (err) {
-          res.status(401).json({
-            result: false,
-            detail: "query error"
-          });
+  // .get("/info", async (req, res, next) => {
+  //   let verifyToken = await Utility.verifyToken(req.headers.token);
+  //   if (verifyToken) {
+  //     res.status(200).json({
+  //       result: true,
+  //       detail: verifyToken
+  //     });
+  //   } else {
+  //     res.status(401).send({
+  //       result: false,
+  //       detail: "UnAuthorized"
+  //     });
+  //   }
+  // })
+  .post("/info",async(req, res, next)=>{
+    if(req.headers.token){
+      Utility.verifyToken(req.headers.token, (err, user) => {
+        user = user._doc;
+        if (user) {
+          UserModel.findById(user._id,(err, newUser)=>{
+            console.log(newUser)
+            newUser.name = req.body.name;
+            newUser.password = crypto.createHash('sha256').update(req.body.password).digest('hex');
+            newUser.save();
+            console.log ("edited")
+            console.log (newUser)
+            res.status(200).json({result:true})
+            
+              
+           
+          })
         } else {
-          res.status(200).json({
-            result: true,
-            detail: "Updated"
-          });
+          res.status(401).send({
+            result: false
+          })
         }
-      })
-    } else {
-      res.status(401).send({
-        result: false,
-        detail: "UnAuthorized"
       });
     }
+
   })
+  
+ 
   .delete("/delete", (req, res, next) => {
-    user.deleteAccount(req.headers.token, (error, result) => {
-      if (error) {
-        res.status(401).json({
-          result: false,
-          detail: "UnAuthorized"
-        });
+    // user.deleteAccount(req.headers.token, (error, result) => {
+    //   if (error) {
+    //     res.status(401).json({
+    //       result: false,
+    //       detail: "UnAuthorized"
+    //     });
+    //   } else {
+    //     res.status(200).json({
+    //       result: true,
+    //       detail: "Deleted"
+    //     });
+    //   }
+    // })
+    UserModel.findOne({
+      "token": req.headers.token
+    }, (err, doc) => {
+      if (doc) {
+        // doc.token = "";
+        // doc.deleted = true;
+        // doc.save()
+        console.log (doc)
+          
       } else {
-        res.status(200).json({
-          result: true,
-          detail: "Deleted"
-        });
+        console.log ("err")
+
       }
-    })
+    });
+
   })
 
 

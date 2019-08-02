@@ -73,7 +73,7 @@ let isExistEmail = (email) => {
     getBaseInfo: async (id, callback) => {
       let user = await User.findOne({
         _id: id
-      }).select("name", "dob", "gender", "organization", "avatar_path");
+      }).select("name", "email");
       if (user) {
         return callback(null, user);
       } else {
@@ -85,11 +85,11 @@ let isExistEmail = (email) => {
       if (amount > 0) {
         User.find({})
           .limit(amount)
-          .select("name", "dob", "gender", "organization", "avatar_path")
+          .select("name","email")
           .exec(callback);
       } else {
         User.find({})
-          .select("name", "dob", "gender", "organization", "avatar_path")
+          .select("name","email")
           .exec(callback);
       }
     },
@@ -97,13 +97,8 @@ let isExistEmail = (email) => {
       user.password = crypto.createHash('sha256').update(user.password).digest('hex');
       User.findById(user._id, (err, oldUser) => {
         oldUser.name = user.name;
-        oldUser.dob = user.dob;
         oldUser.password = user.password;
-        oldUser.gender = user.gender;
-        oldUser.organization = user.organization;
-        oldUser.phone = user.phone;
-        oldUser.avatar_path = user.avatar_path;
-        oldUser.last_update = Date.now();
+     
         oldUser.save()
           .then(res => callback(null, res))
           .catch(err => callback(err, null));
