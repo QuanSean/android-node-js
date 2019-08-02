@@ -5,12 +5,11 @@ let Schema = mongoose.Schema,
 ObjectId = Schema.ObjectId;
 const PostSchema= mongoose.Schema({
     _idUser : ObjectId,
-    name: String,
-    client: [ObjectId],
+    // client: [User.schema],
     title:String,
     description:String,
-    deadline: Date,
+     deadline: Date,
     done:Boolean,
-    delete: Boolean
+    deleted: Boolean
 })
-module.exports = mongoose.model ('Projects', PostSchema)
+module.exports = mongoose.model ('Project', PostSchema)

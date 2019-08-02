@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
+
 require("dotenv/config");
 
 //Routes
@@ -9,6 +10,10 @@ app.use (bodyParser.json());
 
 const postRoute = require ('./routes/user');
 app.use ("/user", postRoute);
+
+const projectRoute = require ('./routes/project');
+app.use ("/project", projectRoute);
+
 
 app.use(bodyParser.json());
 
