@@ -69,30 +69,8 @@ let isExistEmail = (email) => {
       User.findOneAndUpdate({
         "token": token
       }, { "token": "" }, callback);
-    },
-    getBaseInfo: async (id, callback) => {
-      let user = await User.findOne({
-        _id: id
-      }).select("name", "email");
-      if (user) {
-        return callback(null, user);
-      } else {
-        return callback(new Error("NOT_FOUND"), null);
-      }
-    },
-    getBaseInfoOfAmoutUsers: async (amount, callback) => {
-      let users;
-      if (amount > 0) {
-        User.find({})
-          .limit(amount)
-          .select("name","email")
-          .exec(callback);
-      } else {
-        User.find({})
-          .select("name","email")
-          .exec(callback);
-      }
-    },
+    }
+    ,
     updateInfo: (user, callback) => {
       user.password = crypto.createHash('sha256').update(user.password).digest('hex');
       User.findById(user._id, (err, oldUser) => {
