@@ -2,6 +2,9 @@ const projectModel =require ('../Model/Project');
 const taskModel= require('../Model/Task')
 let project={
   //PROJECT
+    getListProject:(idUser,callback)=>{
+      projectModel.find({_idUser:idUser},callback )
+    },
     getInfo: (idUser, idProject, callback) => {
       projectModel.findOne({
           _idUser: idUser,

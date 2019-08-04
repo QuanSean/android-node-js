@@ -8,6 +8,19 @@ let crypto = require("crypto");
 const UserModel = require ('../Model/User');
 
 router
+  .get('/demo',(req, res)=>{
+    // Project.find({"_id":"5d4564f47bda832d7e31dc88"}, (err,r)=>{
+    //   if (err)
+    //   {
+    //     res.json({result:false})
+    //   }
+    //   else
+    //   {
+    //     res.json({result:true, detail:r})
+    //   }
+    // })
+    res.send(req)
+  })
   //verify data before call this api
   .post("/register", (req, res, next) => {
     if (!req.body.email || !req.body.password) {
@@ -30,6 +43,7 @@ router
     }
   })
   .post("/login", (req, res, next) => {
+    
     user.login(req.body.email, req.body.password, (error, result) => {
       if (error || !result) {
         res.status(401).send({
