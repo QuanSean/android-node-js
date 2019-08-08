@@ -130,15 +130,15 @@ public class RegisterActivity extends AppCompatActivity {
                                     Toast.makeText(RegisterActivity.this,"Password cannot be null",Toast.LENGTH_LONG).show();
                                     return;
                                 }
-        compositeDisposable.add(iMyService.registerUser(email,name,password)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<String>() {
-                    @Override
-                    public void accept(String response) throws Exception {
-                        Toast.makeText(RegisterActivity.this,"" +response,Toast.LENGTH_LONG).show();
-                    }
-                }));
+//        compositeDisposable.add(iMyService.registerUser(email,name,password)
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new Consumer<String>() {
+//                    @Override
+//                    public void accept(String response) throws Exception {
+//                        Toast.makeText(RegisterActivity.this,"" +response,Toast.LENGTH_LONG).show();
+//                    }
+//                }));
 
     }
 }

@@ -1,9 +1,8 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const user = require ('../Controllers/User');
-const Project= require('../Model/Project');
-const Utility = require('../Common/utility.js')
-
+const user = require("../Controllers/User");
+const Project = require("../Model/Project");
+const Utility = require("../Common/utility.js");
 
 router
   //verify data before call this api
@@ -11,20 +10,25 @@ router
     if (!req.body.email || !req.body.password) {
       res.status(400).send({
         result: false
-      })
+      });
     } else {
-      user.register(req.body.email, req.body.password, req.body.name, (error, result) => {
-        if (error) {
-          res.status(400).send({
-            result: false,
-            detail: error
-          });
-        } else {
-          res.status(201).send({
-            result: true
-          })
+      user.register(
+        req.body.email,
+        req.body.password,
+        req.body.name,
+        (error, result) => {
+          if (error) {
+            res.status(400).send({
+              result: false,
+              detail: error
+            });
+          } else {
+            res.status(201).send({
+              result: true
+            });
+          }
         }
-      })
+      );
     }
   })
   .post("/login", (req, res, next) => {
@@ -42,7 +46,16 @@ router
           info: result.user
         });
       }
-    })
+    });
+  })
+  .get("/demo", (req, res) => {
+    Project.find({ _id: "5d4564f47bda832d7e31dc88" }, (err, result) => {
+      if (err) {
+        res.json({ result: false });
+      } else {
+        res.json({ result: true, detail: result });
+      }
+    });
   })
   .post("/logout", (req, res, next) => {
     user.logout(req.headers.token, (error, result) => {
@@ -56,10 +69,10 @@ router
           result: true
         });
       }
-    })
+    });
   })
   .post("/verify", async (req, res, next) => {
-    if(req.headers.token){
+    if (req.headers.token) {
       Utility.verifyToken(req.headers.token, (err, user) => {
         user = user._doc;
         if (user) {
@@ -68,11 +81,11 @@ router
             result: "success verify",
             token: req.headers.token,
             info: user
-          })
+          });
         } else {
           res.status(401).send({
             result: false
-          })
+          });
         }
       });
     }
@@ -106,7 +119,7 @@ router
             detail: "Updated"
           });
         }
-      })
+      });
     } else {
       res.status(401).send({
         result: false,
@@ -127,11 +140,7 @@ router
           detail: "Deleted"
         });
       }
-    })
-  })
+    });
+  });
 
-
-
-
-
-module.exports=router;
+module.exports = router;
