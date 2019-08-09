@@ -8,4 +8,8 @@
     <color name="colorPurple">#A130FF</color>
     <color name="colorPurpleT">#64a130ff</color>
     <color name="colorWhite">#ffffff</color>
+
+    <color name="colorPink">#FF3399</color>
+    <color name="background">#DDDDDD</color>
+
 </resources>
