@@ -71,12 +71,11 @@ router
   })
 })
 .post("/", async (req, res, next) => {
-    let newQuest = req.body.newQuest;
     Utility.verifyToken(req.headers.token, (err, user) => {
       if (user) {
-        if (newQuest.title && newQuest.description &&newQuest.deadline) {
+        if (req.body.title && req.body.description &&req.body.deadline) {
           
-            Project.createProject(newQuest, user, (err, result) => {
+            Project.createProject(req.body.title,req.body.description,req.body.deadline, user, (err, result) => {
               if (err) {
                 res.status(404).json({
                   result: false,

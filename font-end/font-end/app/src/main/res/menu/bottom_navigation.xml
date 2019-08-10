@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navigation_action_share"
+        android:icon="@drawable/ic_home_black_50dp"
+        android:title="@string/Home"
+        />
+
+    <item
+        android:id="@+id/navigation_action_shopping"
+        android:icon="@drawable/ic_notifications_black_50dp"
+        android:title="@string/Notification"
+        />
+</menu>

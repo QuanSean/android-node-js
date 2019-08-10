@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="4dp"
+        android:background="@color/cardview_shadow_end_color">
+        <ImageView
+            android:id="@+id/imageTable"
+            android:layout_width="100dp"
+            android:layout_height="100dp" />
+        <TextView
+            android:id="@+id/txtTableName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="13dp"
+            android:layout_alignTop="@id/imageTable"
+            android:layout_alignParentEnd="true"
+            android:layout_toEndOf="@+id/imageTable" />
+        <TextView
+            android:id="@+id/txtTableDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/txtTableName"
+            android:layout_alignParentEnd="true"
+            android:layout_toEndOf="@+id/imageTable" />
+        <TextView
+            android:id="@+id/txtTableDeadline"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_below="@+id/txtTableDescription"
+            android:layout_toEndOf="@+id/imageTable" />
+    </RelativeLayout>
+</android.support.design.card.MaterialCardView>

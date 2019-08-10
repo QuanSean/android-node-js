@@ -11,13 +11,13 @@ let project={
           _id: idProject
         }, callback)
       },
-    createProject: (nProject, user, callback) => {
+    createProject: (title,description,deadline,user, callback) => {
         let newProject = new projectModel({
             _idUser: user._id,
-            title: nProject.title,
-            description: nProject.description,
+            title: title,
+            description: description,
             done:false,
-            deadline:nProject.deadline,
+            deadline:deadline,
             task:[],
             deleted: false
         });
