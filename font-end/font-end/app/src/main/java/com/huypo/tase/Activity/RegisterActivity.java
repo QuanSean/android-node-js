@@ -1,5 +1,6 @@
 package com.huypo.tase.Activity;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,13 +16,18 @@ import android.widget.RelativeLayout;
 import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
 
+import com.huypo.tase.Model.User;
 import com.huypo.tase.R;
 import com.huypo.tase.Retrofit.IMyService;
+import com.huypo.tase.Retrofit.RetrofitClient;
+
+import org.json.JSONObject;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+import retrofit2.Retrofit;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -38,6 +44,8 @@ public class RegisterActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Retrofit retrofitClient = RetrofitClient.getInstance();
+        iMyService = retrofitClient.create(IMyService.class);
         setContentView(R.layout.activity_register);
         Toolbar toolbar = findViewById(R.id.bgHeader);
         setSupportActionBar(toolbar);
@@ -119,26 +127,32 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void registerUser(String email, String name, String password) {
         if(TextUtils.isEmpty(edt_register_email.getText().toString())){
-                                    Toast.makeText(RegisterActivity.this,"Email cannot be null",Toast.LENGTH_LONG).show();
-                                    return;
-                                }
-                                if(TextUtils.isEmpty(edt_register_name.getText().toString())){
-                                    Toast.makeText(RegisterActivity.this,"Name cannot be null",Toast.LENGTH_LONG).show();
-                                    return;
-                                }
-                                if(TextUtils.isEmpty(edt_register_password.getText().toString())){
-                                    Toast.makeText(RegisterActivity.this,"Password cannot be null",Toast.LENGTH_LONG).show();
-                                    return;
-                                }
-//        compositeDisposable.add(iMyService.registerUser(email,name,password)
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new Consumer<String>() {
-//                    @Override
-//                    public void accept(String response) throws Exception {
-//                        Toast.makeText(RegisterActivity.this,"" +response,Toast.LENGTH_LONG).show();
-//                    }
-//                }));
+            Toast.makeText(RegisterActivity.this,"Email cannot be null",Toast.LENGTH_LONG).show();
+            return;
+        }
+        if(TextUtils.isEmpty(edt_register_name.getText().toString())){
+            Toast.makeText(RegisterActivity.this,"Name cannot be null",Toast.LENGTH_LONG).show();
+            return;
+        }
+        if(TextUtils.isEmpty(edt_register_password.getText().toString())){
+            Toast.makeText(RegisterActivity.this,"Password cannot be null",Toast.LENGTH_LONG).show();
+            return;
+        }
+        compositeDisposable.add( iMyService.registerUser(edt_register_email.getText().toString(),edt_register_password.getText().toString(),edt_register_name.getText().toString())
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
+                        new Consumer<String>() {
+                            @Override
+                            public void accept(String reponse) throws Exception
+                            {
+                                Toast.makeText(RegisterActivity.this,"Success",Toast.LENGTH_LONG).show();
+
+                                Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                                startActivity(intent);
+
+
+                            }
+                        }
+                ));
 
     }
 }

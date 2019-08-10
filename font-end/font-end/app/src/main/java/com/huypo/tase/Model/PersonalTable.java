@@ -9,13 +9,19 @@ public class PersonalTable {
     private String token;
     private String idProject;
     private String idTask;
+    private String title;
 
-    public PersonalTable(String txtTableName, String txtTableDescription, Date txtTableDeadline, String token, String idProject) {
+    public String getTitle() {
+        return title;
+    }
+
+    public PersonalTable(String txtTableName, String txtTableDescription, Date txtTableDeadline, String token, String idProject, String title) {
         this.txtTableName = txtTableName;
         this.txtTableDescription = txtTableDescription;
         this.txtTableDeadline = txtTableDeadline;
         this.token = token;
         this.idProject = idProject;
+        this.title=title;
     }
 
     public void setTxtTableName(String txtTableName) {

@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void loginUser (String email, String password)
     {
-        compositeDisposable.add(iMyService.loginUser(email,password)
+        compositeDisposable.add( iMyService.loginUser(email,password)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
                         new Consumer<String>() {
                             @Override
@@ -125,21 +125,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     JSONObject jsonObject= new JSONObject(reponse);
                                     JSONObject jsonObject1= new JSONObject(jsonObject.getString("info"));
 
-//                                    String str1 = reponse;
-//                                    String[] arStr = str1.split("\\,");
-//                                    String[] arStr0 = arStr[0].split("\\:");
-//                                    String[] arStr1 = arStr[1].split("\\:");
-//                                    String[] arStr2 = arStr[2].split("\\:");
-//                                    String[] arStr3 = arStr[3].split("\\:");
-//                                    String[] arStr4 = arStr[4].split("\\:");
-//                                    String[] arStr5 = arStr[5].split("\\:");
-//
-//                                    String result=arStr0[1].trim();
-//                                    String token=arStr1[1].replace('"',' ').trim();
-//                                    String _id=arStr2[2].replace('"',' ').trim();
-//                                    String email=arStr3[1].replace('"',' ').trim();
-//                                    String name=arStr4[1].replace('"',' ').trim();
-//                                    String delete=arStr5[1].trim();
                                     Boolean result  = new Boolean(jsonObject.getString("result"));
 
                                     Boolean deleted  = new Boolean( jsonObject1.getString("deleted"));
@@ -147,7 +132,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                                     User user= new User(result,jsonObject.getString("token"),jsonObject1.getString("_id"),jsonObject1.getString("email"),jsonObject1.getString("name"),deleted);
                                     User user1 = new User();
-                                    Toast.makeText(MainActivity.this,result.toString(), Toast.LENGTH_SHORT).show();
 
                                     Intent intent= new Intent(MainActivity.this,MainMenu.class);
                                     Bundle bundle= new Bundle();
@@ -245,6 +229,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             pairs[0] = new Pair<View, String>(txtLogin, "txtLogin");
             ActivityOptions activityOptions = ActivityOptions.makeSceneTransitionAnimation(MainActivity.this, pairs);
             startActivity(intent, activityOptions.toBundle());
+
+
         }
     }
 }
