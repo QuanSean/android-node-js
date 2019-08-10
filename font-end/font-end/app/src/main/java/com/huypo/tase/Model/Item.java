@@ -4,11 +4,21 @@ public class Item {
     private int id;
     private String title;
     private Boolean done;
+    private Boolean deleted;
 
-    public Item(int id, String title, Boolean done) {
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    public Item(int id, String title, Boolean done, Boolean deleted) {
         this.id = id;
         this.title = title;
         this.done = done;
+        this.deleted = deleted;
     }
 
     public Item() {

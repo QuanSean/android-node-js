@@ -11,6 +11,41 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/background">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/b"
+            >
+            <!--<android.support.v7.widget.AppCompatTextView-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:elevation="5dp"-->
+                <!--android:id="@+id/txtTitle"-->
+                <!--android:textSize="17sp"-->
+                <!--android:text="@string/txtCaNhan"-->
+                <!--android:textColor="@color/common_google_signin_btn_text_dark_focused"-->
+                <!--android:background="@color/colorWhite"-->
+                <!--android:padding="10dp"/>-->
+
+            <ListView
+                android:id="@+id/listPersonalTable"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                <!--android:layout_below="@id/txtTitle"-->
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginBottom="90dp"
+                android:headerDividersEnabled="false"
+                android:dividerHeight="20dp"
+                >
+
+                <!--<ListView-->
+                <!--android:id="@+id/listPersonalTable"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent" />-->
+            </ListView>
+        </RelativeLayout>
 
 
         <android.support.design.bottomappbar.BottomAppBar
@@ -41,31 +76,5 @@
             android:onClick="btnNewTable"/>
 
     </android.support.design.widget.CoordinatorLayout>
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
-        <android.support.v7.widget.AppCompatTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:elevation="5dp"
-            android:id="@+id/txtTitle"
-            android:textSize="17sp"
-            android:text="@string/txtCaNhan"
-            android:textColor="@color/common_google_signin_btn_text_dark_focused"
-            android:background="@color/colorWhite"
-            android:padding="10dp"/>
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/txtTitle"
-            android:layout_marginBottom="90dp">
-
-            <ListView
-                android:id="@+id/listPersonalTable"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </ScrollView>
-    </RelativeLayout>
 </android.support.constraint.ConstraintLayout>

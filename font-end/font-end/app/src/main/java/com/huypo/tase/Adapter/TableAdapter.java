@@ -52,7 +52,7 @@ public class TableAdapter extends BaseAdapter {
         TextView deadline = convertView.findViewById(R.id.txtTableDeadline);
 
         PersonalTable personalTable = personalTables.get(position);
-        images.setImageResource(personalTable.getImageTable());
+//        images.setImageResource(personalTable.getImageTable());
         tablename.setText(personalTable.getTxtTableName());
         description.setText(personalTable.getTxtTableDescription());
         deadline.setText(personalTable.getTxtTableDeadline().toString());
