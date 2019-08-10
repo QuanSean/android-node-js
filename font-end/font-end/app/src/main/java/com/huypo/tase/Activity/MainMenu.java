@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -69,61 +70,40 @@ public class MainMenu extends AppCompatActivity {
         calendar.setTime(date);
         PersonalTable personalTable= new PersonalTable("Demo"," The technical term for this physical arrangement is codex (in the plural, codices)", calendar.getTime());
         PersonalTable personalTable1= new PersonalTable( "Demo1"," The technical term for this physical arrangement is codex (in the plural, codices)", calendar.getTime());
-        PersonalTable personalTable2= new PersonalTable( "Demo1"," The technical term for this physical arrangement is codex (in the plural, codices)", calendar.getTime());
-        PersonalTable personalTable3= new PersonalTable( "Demo1"," The technical term for this physical arrangement is codex (in the plural, codices)", calendar.getTime());
-        PersonalTable personalTable4= new PersonalTable( "Demo1"," The technical term for this physical arrangement is codex (in the plural, codices)", calendar.getTime());
-        PersonalTable personalTable5= new PersonalTable( "Demo1"," The technical term for this physical arrangement is codex (in the plural, codices)", calendar.getTime());
-        PersonalTable personalTable6= new PersonalTable( "Demo1"," The technical term for this physical arrangement is codex (in the plural, codices)", calendar.getTime());
-        PersonalTable personalTable7= new PersonalTable( "Demo1"," The technical term for this physical arrangement is codex (in the plural, codices)", calendar.getTime());
-        PersonalTable personalTable8= new PersonalTable( "Demo1"," The technical term for this physical arrangement is codex (in the plural, codices)", calendar.getTime());
-        PersonalTable personalTable9= new PersonalTable( "Demo1"," The technical term for this physical arrangement is codex (in the plural, codices)", calendar.getTime());
-        PersonalTable personalTable10= new PersonalTable( "Demo1"," The technical term for this physical arrangement is codex (in the plural, codices)", calendar.getTime());
-        PersonalTable personalTable11= new PersonalTable( "Demo1"," The technical term for this physical arrangement is codex (in the plural, codices)", calendar.getTime());
-        PersonalTable personalTable12= new PersonalTable( "Demo1"," The technical term for this physical arrangement is codex (in the plural, codices)", calendar.getTime());
 
 //        int imageTable, String txtTableName, String txtTableDescription, Date txtTableDeadline
         ArrayList<PersonalTable> personalTables1 = new ArrayList<>();
 
-        personalTables1.add(personalTable);
-        personalTables1.add(personalTable1);
-        personalTables1.add(personalTable2);
-        personalTables1.add(personalTable3);
-        personalTables1.add(personalTable4);
-        personalTables1.add(personalTable5);
-        personalTables1.add(personalTable6);
-        personalTables1.add(personalTable7);
-        personalTables1.add(personalTable8);
-        personalTables1.add(personalTable9);
-        personalTables1.add(personalTable10);
-        personalTables1.add(personalTable11);
-        personalTables1.add(personalTable12);
-
-
-        Toast.makeText(MainMenu.this,personalTables1.get(1).toString(), Toast.LENGTH_SHORT).show();
-
-        TableAdapter tableAdapter;
-
-
-        tableAdapter = new TableAdapter(MainMenu.this, personalTables1);
+//        personalTables1.add(personalTable);
+//        personalTables1.add(personalTable1);
 
 
 
-        listView.setAdapter(tableAdapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                PersonalTable p=personalTables1.get(i);
+                Toast.makeText(MainMenu.this,"Chào mừng "+ p.getToken(), Toast.LENGTH_SHORT).show();
 
+            }
+        });
 
 
         TableName = findViewById(R.id.txtTableName);
         Intent intent = getIntent();
         Bundle bundle = intent.getBundleExtra("User");
         User user = (User) bundle.getSerializable("Info");
+
         compositeDisposable.add(iMyService.getProject(user.getToken())
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
                         new Consumer<String>() {
                             @Override
                             public void accept(String reponse) throws Exception {
 
-
                                 JSONObject jsonObject = new JSONObject(reponse);
+
+
+
                                 JSONArray jsonArray = jsonObject.getJSONArray("detail");
                                 Project project = new Project();
                                 JSONObject demo = new JSONObject();
@@ -196,12 +176,28 @@ public class MainMenu extends AppCompatActivity {
                                             Project project1 = new Project(_id, _idUser, title, description, done, deadline, deleted, tasks);
                                             projectArrayList.add(project1);
 
+
+
+
+
                                         } catch (JSONException e) {
+
                                             Toast.makeText(MainMenu.this,"Err", Toast.LENGTH_SHORT).show();
 
 
                                         }
                                     }
+
+                                    for (Project p:projectArrayList)
+                                    {
+                                        personalTables1.add(new PersonalTable( p.getTitle(),p.getDescription(),p.getDeadline(),user.getToken(),p.get_id()));
+                                    }
+                                    TableAdapter tableAdapter;
+
+
+                                    tableAdapter = new TableAdapter(MainMenu.this, personalTables1);
+
+                                    listView.setAdapter(tableAdapter);
 //
                                 }
 
@@ -230,6 +226,9 @@ public class MainMenu extends AppCompatActivity {
         btn_create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Toast.makeText(MainMenu.this,"Chào mừng "
+                        , Toast.LENGTH_SHORT).show();
+
 
             }
         });

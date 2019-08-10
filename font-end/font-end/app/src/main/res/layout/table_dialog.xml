@@ -16,9 +16,29 @@
         android:textColor="#000"/>
 
     <EditText
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:hint="@string/TableName"
+    android:layout_marginTop="15dp"
+    android:inputType="text"
+    android:id="@+id/editProjectName"
+    android:textSize="20sp"
+    android:textColorHighlight="@color/colorAccent"/>
+
+    <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/TableName"
+        android:hint="Description"
+        android:layout_marginTop="15dp"
+        android:inputType="text"
+        android:id="@+id/editTableDescription"
+        android:textSize="20sp"
+        android:textColorHighlight="@color/colorAccent"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Deadline: dd/MM/yyyy"
         android:layout_marginTop="15dp"
         android:inputType="text"
         android:id="@+id/editTableName"

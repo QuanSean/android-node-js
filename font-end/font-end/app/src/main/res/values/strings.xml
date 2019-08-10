@@ -12,9 +12,9 @@
     <string name="Home">Home</string>
     <string name="Notification">Notification</string>
     <string name="txtCaNhan">Personal Table</string>
-    <string name="txtTaoBang">Create Table</string>
-    <string name="TableName">Table Name</string>
-    <string name="NewTable">New Table</string>
+    <string name="txtTaoBang">Create Project </string>
+    <string name="TableName">Project Name</string>
+    <string name="NewTable">New Project</string>
     <string name="Cancel">Cancel</string>
 
 </resources>
