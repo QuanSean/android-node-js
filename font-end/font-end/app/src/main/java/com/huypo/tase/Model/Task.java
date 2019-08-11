@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class Task {
-    private String _id;
+    private Integer _id;
     private String title;
     private Date deadline;
     private Boolean delete;
@@ -21,7 +21,7 @@ public class Task {
     private ArrayList<Item> item;
 
 
-    public Task(String _id, String title, Date deadline, Boolean delete, Boolean done, ArrayList<Item> item) {
+    public Task(Integer _id, String title, Date deadline, Boolean delete, Boolean done, ArrayList<Item> item) {
         this._id = _id;
         this.title = title;
         this.deadline = deadline;
@@ -45,11 +45,11 @@ public class Task {
     public Task() {
     }
 
-    public String get_id() {
+    public Integer get_id() {
         return _id;
     }
 
-    public void set_id(String _id) {
+    public void set_id(Integer _id) {
         this._id = _id;
     }
 

@@ -6,18 +6,27 @@ import android.content.SharedPreferences;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.JsonObject;
 import com.huypo.tase.Adapter.CardItemString;
 import com.huypo.tase.Adapter.CardPagerAdapterS;
+import com.huypo.tase.Model.Item;
 import com.huypo.tase.Model.PersonalTable;
+import com.huypo.tase.Model.Task;
 import com.huypo.tase.Model.User;
 import com.huypo.tase.R;
 import com.huypo.tase.Retrofit.IMyService;
 import com.huypo.tase.Retrofit.RetrofitClient;
 import com.huypo.tase.Utils.ShadowTranformer;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -65,8 +74,7 @@ public class DashBoard extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dash_board);
         Retrofit retrofitClient = RetrofitClient.getInstance();
-        a.add("a");
-        a.add("b");
+
         iMyService = retrofitClient.create(IMyService.class);
 
         //get activity form context
@@ -85,14 +93,9 @@ public class DashBoard extends AppCompatActivity {
 
         for (int i=0; i<titlesText.length; i++){
 
-            mCardAdapter.addCardItemS(new CardItemString( titlesText[i], detailsArray[i],a));
         }
 
-        mCardShadowTransformer = new ShadowTranformer(mViewPager, mCardAdapter);
 
-        mViewPager.setAdapter(mCardAdapter);
-        mViewPager.setPageTransformer(false, mCardShadowTransformer);
-        mViewPager.setOffscreenPageLimit(3);
 
         compositeDisposable.add(iMyService.showListTask(personalTable.getToken(), personalTable.getIdProject())
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
@@ -100,7 +103,62 @@ public class DashBoard extends AppCompatActivity {
                             @Override
                             public void accept(String reponse) throws Exception {
 
-                                Toast.makeText(DashBoard.this, reponse, Toast.LENGTH_SHORT).show();
+                                JSONObject jsonObject = new JSONObject(reponse);
+                                JSONArray  detail= jsonObject.getJSONArray("detail");
+                                ArrayList<Task> arrayListTask = new ArrayList<>();
+
+
+
+
+                                    for (int i=0;i<detail.length();i++)
+                                    {
+                                        JSONObject objectTask = detail.getJSONObject(i);
+                                        JSONArray taskArray = objectTask.getJSONArray("task");
+                                        if (taskArray.length()==0){
+                                            TextView a=(TextView) findViewById(R.id.tvTask);
+                                            a.setText("Quản lí dự án tốt hơn bằng cách ãy tạo công việc mới");
+
+
+                                        }
+                                        else
+                                        {
+                                            for (int j=0;j<taskArray.length();j++)
+                                            {
+                                                JSONObject taskObject = taskArray.getJSONObject(j);
+                                                String title=taskObject.getString("title");
+                                                String description="";
+                                                Boolean done = new Boolean(taskObject.getString("done"));
+                                                Boolean delete = new Boolean(taskObject.getString("delete"));
+                                                Integer _id=taskObject.getInt("_id");
+                                                Date deadline = new SimpleDateFormat("yyyy-MM-dd").parse(taskObject.getString("deadline"));
+
+                                                ArrayList<Item> items= new ArrayList<>();
+                                                Task t = new Task(_id,title,deadline,delete,done,items);
+                                                arrayListTask.add(t);
+//                                                Toast.makeText(DashBoard.this,t.get.toString(), Toast.LENGTH_SHORT).show();
+                                            }
+//                                            Toast.makeText(DashBoard.this,taskArray.get(0).toString(), Toast.LENGTH_SHORT).show();
+
+                                        }
+                                    }
+
+                                    for (Task t: arrayListTask)
+                                    {
+                                            mCardAdapter.addCardItemS(new CardItemString( t.getTitle(), "",a));
+                                    }
+                                mCardShadowTransformer = new ShadowTranformer(mViewPager, mCardAdapter);
+
+                                mViewPager.setAdapter(mCardAdapter);
+                                mViewPager.setPageTransformer(false, mCardShadowTransformer);
+                                mViewPager.setOffscreenPageLimit(3);
+
+
+
+//                                for (int i=0; i<titlesText.length; i++){
+//
+//                                    mCardAdapter.addCardItemS(new CardItemString( titlesText[i], detailsArray[i],a));
+//                                }
+
 
                             }
                         }

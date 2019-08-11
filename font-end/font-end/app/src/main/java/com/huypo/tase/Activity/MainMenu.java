@@ -241,10 +241,11 @@ public class MainMenu extends AppCompatActivity {
                                 if (jsonArray.length()==0)
                                 {
                                     TextView a=(TextView) findViewById(R.id.tb);
-                                    a.setText("Hãy bắt đầu trải nghiệm cùng với TASE, bằng việc tạo project đầu tiên");
+                                    a.setText("Chào mừng bạn đến với T. Hãy bắt đầu trải nghiệm cùng với TASE bằng việc tạo project đầu tiên");
                                 }
                                 else
                                 {
+                                    int count=0;
                                     for (int i = 0; i < jsonArray.length(); i++) {
                                         try {
                                             JSONObject oneObject = jsonArray.getJSONObject(i);
@@ -258,6 +259,7 @@ public class MainMenu extends AppCompatActivity {
                                             }
                                             else
                                             {
+                                                count++;
                                                 String _id = oneObject.getString("_id");
                                                 String _idUser = oneObject.getString("_idUser");
                                                 String title = oneObject.getString("title");
@@ -287,7 +289,7 @@ public class MainMenu extends AppCompatActivity {
 
                                                         if (deletedTask==false)
                                                         {
-                                                            String _idTask = taskObject.getString("_id");
+                                                            Integer _idTask = taskObject.getInt("_id");
                                                             String titleTask = taskObject.getString("title");
                                                             Date deadlineTask = new SimpleDateFormat("yyyy-MM-dd").parse(taskObject.getString("deadline"));
 //                                                    Date deadlineTask = new SimpleDateFormat("yyyy-MM-dd").parse("2019-01-01");
@@ -302,8 +304,6 @@ public class MainMenu extends AppCompatActivity {
                                                         else {
 
                                                         }
-
-
                                                     }
                                                 }
                                                 Project project1 = new Project(_id, _idUser, title, description, done, deadline, deleted, tasks);
@@ -313,22 +313,19 @@ public class MainMenu extends AppCompatActivity {
                                         } catch (JSONException e) {
 
                                             Toast.makeText(MainMenu.this,"Err", Toast.LENGTH_SHORT).show();
-
-
                                         }
                                     }
 
-
-
+                                    if (count==0)
+                                    {
+                                        TextView a=(TextView) findViewById(R.id.tb);
+                                        a.setText("Bạn đã không còn project nào, hãy lên kế hoạch bằng việc tạo project mới nhé !");
+                                    }
                                     for (Project p:projectArrayList)
                                     {
                                         personalTables1.add(new PersonalTable( p.getTitle(),p.getDescription(),p.getDeadline(),user.getToken(),p.get_id(),p.getTitle(),p.getDone()));
                                     }
                                     TableAdapter tableAdapter;
-
-
-//                                    tableAdapter = new TableAdapter(MainMenu.this, personalTables1);
-//                                    listView.setAdapter(tableAdapter);
 
                                     listView.setAdapter(new TableAdapter(MainMenu.this, personalTables1){
                                         @Override
@@ -339,9 +336,6 @@ public class MainMenu extends AppCompatActivity {
                                             int yearNow= cal.get(Calendar.YEAR);
                                             int monthNow= cal.get(Calendar.MONTH);
                                             int dayNow= cal.get(Calendar.DAY_OF_MONTH);
-
-
-
 
                                             PersonalTable personalTable2= personalTables1.get(position);
                                             Date deadline=personalTable2.getTxtTableDeadline();
@@ -357,8 +351,6 @@ public class MainMenu extends AppCompatActivity {
                                                 TextView textView=(TextView) row.findViewById(R.id.txtTableName);
                                                 TextView textView1=(TextView) row.findViewById(R.id.txtTableDescription);
                                                 TextView textView2=(TextView) row.findViewById(R.id.txtTableDeadline);
-
-
                                                 textView.setTextColor(Color.WHITE);
                                                 textView1.setTextColor(Color.WHITE);
                                                 textView2.setTextColor(Color.WHITE);
@@ -371,13 +363,9 @@ public class MainMenu extends AppCompatActivity {
                                                     TextView textView=(TextView) row.findViewById(R.id.txtTableName);
                                                     TextView textView1=(TextView) row.findViewById(R.id.txtTableDescription);
                                                     TextView textView2=(TextView) row.findViewById(R.id.txtTableDeadline);
-
-
                                                     textView.setTextColor(Color.WHITE);
                                                     textView1.setTextColor(Color.WHITE);
                                                     textView2.setTextColor(Color.WHITE);
-
-
                                                 }
                                                 else
                                                 {
@@ -385,8 +373,6 @@ public class MainMenu extends AppCompatActivity {
 
                                                 }
                                             }
-
-
 
                                             return row;
                                         }

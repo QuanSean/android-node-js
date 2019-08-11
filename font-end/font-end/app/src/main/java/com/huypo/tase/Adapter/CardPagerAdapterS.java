@@ -77,7 +77,7 @@ public class CardPagerAdapterS extends PagerAdapter implements CardAdapter {
 
     private void bind(CardItemString item, View view) {
         TextView titleTextView = (TextView) view.findViewById(R.id.titleTextView);
-        TextView contentTextView = (TextView) view.findViewById(R.id.contentTextView);
+//        TextView contentTextView = (TextView) view.findViewById(R.id.contentTextView);
         ListView listView= (ListView) view.findViewById(R.id.listTask);
 
         ArrayAdapter arrayAdapter = new ArrayAdapter(DashBoard.getAppContext(), android.R.layout.simple_list_item_1, item.getListTask());
@@ -85,6 +85,6 @@ public class CardPagerAdapterS extends PagerAdapter implements CardAdapter {
 
 
         titleTextView.setText(item.getTitle());
-        contentTextView.setText(item.getText());
+//        contentTextView.setText(item.getText());
     }
 }
