@@ -2,6 +2,7 @@ package com.huypo.tase.Activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,6 +16,8 @@ import com.huypo.tase.R;
 import com.huypo.tase.Retrofit.IMyService;
 import com.huypo.tase.Retrofit.RetrofitClient;
 import com.huypo.tase.Utils.ShadowTranformer;
+
+import java.util.ArrayList;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -47,17 +50,27 @@ public class DashBoard extends AppCompatActivity {
             "Time table details radom, Lorem ipsum characters ment for testing of programs and characters or displaying random informations",
             "Time table details radom, Lorem ipsum characters ment for testing of programs and characters or displaying random informations",
     };
-    private Context context;
+    ArrayList<String> a= new ArrayList<>();
+
+
+
+
+
+
+    private static Context context;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dash_board);
         Retrofit retrofitClient = RetrofitClient.getInstance();
+        a.add("a");
+        a.add("b");
         iMyService = retrofitClient.create(IMyService.class);
 
-
-
-        context = this;
+        //get activity form context
+        DashBoard.context = getApplicationContext();
 
         Intent intent = getIntent();
         Bundle bundle = intent.getBundleExtra("Project");
@@ -72,7 +85,7 @@ public class DashBoard extends AppCompatActivity {
 
         for (int i=0; i<titlesText.length; i++){
 
-            mCardAdapter.addCardItemS(new CardItemString( titlesText[i], detailsArray[i]));
+            mCardAdapter.addCardItemS(new CardItemString( titlesText[i], detailsArray[i],a));
         }
 
         mCardShadowTransformer = new ShadowTranformer(mViewPager, mCardAdapter);
@@ -93,6 +106,9 @@ public class DashBoard extends AppCompatActivity {
                         }
                 ));
 
+    }
+    public static Context getAppContext() {
+        return DashBoard.context;
     }
     
 }

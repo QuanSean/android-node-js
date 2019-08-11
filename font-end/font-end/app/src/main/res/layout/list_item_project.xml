@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/deadlineItemProject"
         android:textSize="15dp"
-        android:textColor="@android:color/darker_gray"
+         android:textColor="@android:color/darker_gray"
     />
 
 

@@ -5,8 +5,12 @@ import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import com.huypo.tase.Activity.DashBoard;
 import com.huypo.tase.R;
 
 import java.util.ArrayList;
@@ -74,6 +78,12 @@ public class CardPagerAdapterS extends PagerAdapter implements CardAdapter {
     private void bind(CardItemString item, View view) {
         TextView titleTextView = (TextView) view.findViewById(R.id.titleTextView);
         TextView contentTextView = (TextView) view.findViewById(R.id.contentTextView);
+        ListView listView= (ListView) view.findViewById(R.id.listTask);
+
+        ArrayAdapter arrayAdapter = new ArrayAdapter(DashBoard.getAppContext(), android.R.layout.simple_list_item_1, item.getListTask());
+        listView.setAdapter(arrayAdapter);
+
+
         titleTextView.setText(item.getTitle());
         contentTextView.setText(item.getText());
     }
