@@ -38,6 +38,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -68,8 +69,6 @@ public class MainMenu extends AppCompatActivity {
 
      TextView TableName;
     CompositeDisposable compositeDisposable = new CompositeDisposable();
-    CompositeDisposable compositeDisposable1 = new CompositeDisposable();
-
     IMyService iMyService;
     ArrayAdapter arrayAdapter;
     ListView list;
@@ -105,14 +104,7 @@ public class MainMenu extends AppCompatActivity {
         User user = (User) bundle.getSerializable("Info");
         token=user.getToken();
 
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                PersonalTable p=personalTables1.get(i);
-                Toast.makeText(MainMenu.this,"Chào mừng "+ p.getIdProject(), Toast.LENGTH_SHORT).show();
-            }
-        });
+//
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -124,9 +116,16 @@ public class MainMenu extends AppCompatActivity {
                     @Override
 
                     public void run() {
+                        if (click==1)
+                        {
+                            Intent intent = new Intent(MainMenu.this, DashBoard.class);
+                            Bundle bundle= new Bundle();
+                            bundle.putSerializable("Info", p);
+                            intent.putExtra("Project", bundle);
+                            startActivity(intent);
+                        }
                         if (click==2)
                         {
-                            Toast.makeText(MainMenu.this,"2 ", Toast.LENGTH_SHORT).show();
 
                             DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                                 @Override

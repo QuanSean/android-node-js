@@ -21,7 +21,7 @@ public class RetrofitClient {
         if (instance==null)
 
             instance= new Retrofit.Builder()
-                    .baseUrl("https://tase-nodejs.herokuapp.com/")
+                    .baseUrl("http://192.168.1.110:2409/")
                     .addConverterFactory(ScalarsConverterFactory.create())
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .build();

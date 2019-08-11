@@ -39,6 +39,9 @@ public interface IMyService {
     @FormUrlEncoded
     Observable<String> changeStatusDoneProject(@Header("token") String token,@Field("id") String id);
 
+    @POST("/project/task/list")
+    @FormUrlEncoded
+    Observable<String> showListTask(@Header("token") String token,@Field("id") String id);
 
 
     @GET("/project")
@@ -46,6 +49,9 @@ public interface IMyService {
             "Accept:application/json"
     })
     Observable<String> getProject(@Header("token") String token);
+
+
+
 
 
     @GET ("/user/demo")

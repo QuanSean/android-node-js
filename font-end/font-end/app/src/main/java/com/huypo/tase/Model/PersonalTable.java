@@ -1,8 +1,9 @@
 package com.huypo.tase.Model;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class PersonalTable {
+public class PersonalTable implements Serializable {
     private String txtTableName;
     private String txtTableDescription;
     private Date txtTableDeadline;
