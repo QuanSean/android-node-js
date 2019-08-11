@@ -10,9 +10,21 @@ public class PersonalTable {
     private String idProject;
     private String idTask;
     private String title;
+    private Boolean done;
 
     public String getTitle() {
         return title;
+    }
+
+    public PersonalTable(String txtTableName, String txtTableDescription, Date txtTableDeadline, String token, String idProject, String title, Boolean done) {
+        this.txtTableName = txtTableName;
+        this.txtTableDescription = txtTableDescription;
+        this.txtTableDeadline = txtTableDeadline;
+        this.token = token;
+        this.idProject = idProject;
+        this.idTask = idTask;
+        this.title = title;
+        this.done = done;
     }
 
     public PersonalTable(String txtTableName, String txtTableDescription, Date txtTableDeadline, String token, String idProject, String title) {
@@ -22,6 +34,18 @@ public class PersonalTable {
         this.token = token;
         this.idProject = idProject;
         this.title=title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public Boolean getDone() {
+        return done;
+    }
+
+    public void setDone(Boolean done) {
+        this.done = done;
     }
 
     public void setTxtTableName(String txtTableName) {

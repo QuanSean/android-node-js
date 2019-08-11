@@ -35,6 +35,10 @@ public interface IMyService {
     @FormUrlEncoded
     Observable<String> deleteProject(@Header("token") String token,@Field("id") String id);
 
+    @POST("/project/done")
+    @FormUrlEncoded
+    Observable<String> changeStatusDoneProject(@Header("token") String token,@Field("id") String id);
+
 
 
     @GET("/project")

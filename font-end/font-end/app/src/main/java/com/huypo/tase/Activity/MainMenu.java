@@ -2,7 +2,9 @@ package com.huypo.tase.Activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
+import android.os.Handler;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +12,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -34,6 +38,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -52,6 +57,8 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Retrofit;
 
+import static android.media.CamcorderProfile.get;
+
 public class MainMenu extends AppCompatActivity {
 
      ListView listView;
@@ -69,6 +76,7 @@ public class MainMenu extends AppCompatActivity {
     ArrayList<Project> projectArrayList = new ArrayList<>();
     private String token="";
     private String idPr="";
+    int click=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,29 +105,73 @@ public class MainMenu extends AppCompatActivity {
         User user = (User) bundle.getSerializable("Info");
         token=user.getToken();
 
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 PersonalTable p=personalTables1.get(i);
                 Toast.makeText(MainMenu.this,"Chào mừng "+ p.getIdProject(), Toast.LENGTH_SHORT).show();
-//                compositeDisposable1.add( iMyService.deleteProject(token, p.getIdProject())
-//                        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
-//                                new Consumer<String>() {
-//                                    @Override
-//                                    public void accept(String reponse) throws Exception
-//                                    {
-//
-//                                        try{
-//
-//
-//
-//                                        }
-//                                        catch (Exception e){
-//
-//                                        }
-//                                    }
-//                                }
-//                        ));
+            }
+        });
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                click=click+1;
+                PersonalTable p=personalTables1.get(i);
+                Handler handler= new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+
+                    public void run() {
+                        if (click==2)
+                        {
+                            Toast.makeText(MainMenu.this,"2 ", Toast.LENGTH_SHORT).show();
+
+                            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    switch (which){
+                                        case DialogInterface.BUTTON_POSITIVE:
+
+                                            compositeDisposable.add( iMyService.changeStatusDoneProject(token,p.getIdProject())
+                                                    .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
+                                                            new Consumer<String>() {
+                                                                @Override
+                                                                public void accept(String reponse) throws Exception
+                                                                {
+
+
+                                                                }
+                                                            }
+                                                    ));
+
+
+                                            Intent intent = getIntent();
+                                            finish();
+                                            startActivity(intent);
+
+
+
+
+                                            break;
+
+                                        case DialogInterface.BUTTON_NEGATIVE:
+                                            break;
+                                    }
+                                }
+                            };
+                            AlertDialog.Builder builder = new AlertDialog.Builder(MainMenu.this);
+                            builder.setMessage("Bạn đã hoàn thành dự án "+p.getTitle()).setPositiveButton("Đồng ý", dialogClickListener)
+                                    .setNegativeButton("Không", dialogClickListener).show();
+
+                        }
+                        click=0;
+
+                    }
+                }, 500);
+            }
+            public void onItemDoubleClick(AdapterView<?> adapterView, View view, int i, long l) {
 
 
             }
@@ -259,15 +311,6 @@ public class MainMenu extends AppCompatActivity {
                                                 projectArrayList.add(project1);
 
                                             }
-
-
-//
-
-
-
-
-
-
                                         } catch (JSONException e) {
 
                                             Toast.makeText(MainMenu.this,"Err", Toast.LENGTH_SHORT).show();
@@ -280,14 +323,75 @@ public class MainMenu extends AppCompatActivity {
 
                                     for (Project p:projectArrayList)
                                     {
-                                        personalTables1.add(new PersonalTable( p.getTitle(),p.getDescription(),p.getDeadline(),user.getToken(),p.get_id(),p.getTitle()));
+                                        personalTables1.add(new PersonalTable( p.getTitle(),p.getDescription(),p.getDeadline(),user.getToken(),p.get_id(),p.getTitle(),p.getDone()));
                                     }
                                     TableAdapter tableAdapter;
 
 
-                                    tableAdapter = new TableAdapter(MainMenu.this, personalTables1);
+//                                    tableAdapter = new TableAdapter(MainMenu.this, personalTables1);
+//                                    listView.setAdapter(tableAdapter);
 
-                                    listView.setAdapter(tableAdapter);
+                                    listView.setAdapter(new TableAdapter(MainMenu.this, personalTables1){
+                                        @Override
+                                        public View getView(int position, View convertView, ViewGroup parent) {
+                                            View row = super.getView(position, convertView, parent);
+
+                                            Calendar  cal = Calendar.getInstance();
+                                            int yearNow= cal.get(Calendar.YEAR);
+                                            int monthNow= cal.get(Calendar.MONTH);
+                                            int dayNow= cal.get(Calendar.DAY_OF_MONTH);
+
+
+
+
+                                            PersonalTable personalTable2= personalTables1.get(position);
+                                            Date deadline=personalTable2.getTxtTableDeadline();
+                                            Calendar cal1= Calendar.getInstance();
+                                            cal1.setTime(deadline);
+                                            int year= cal1.get(Calendar.YEAR);
+                                            int month= cal1.get(Calendar.MONTH);
+                                            int day= cal1.get(Calendar.DAY_OF_MONTH);
+
+                                            if (personalTable2.getDone()==true)
+                                            {
+                                                row.setBackgroundColor (0x989898);
+                                                TextView textView=(TextView) row.findViewById(R.id.txtTableName);
+                                                TextView textView1=(TextView) row.findViewById(R.id.txtTableDescription);
+                                                TextView textView2=(TextView) row.findViewById(R.id.txtTableDeadline);
+
+
+                                                textView.setTextColor(Color.WHITE);
+                                                textView1.setTextColor(Color.WHITE);
+                                                textView2.setTextColor(Color.WHITE);
+                                            }
+                                            else
+                                            {
+                                                if (year==yearNow&&month==monthNow&&day-1==dayNow)
+                                                {
+                                                    row.setBackgroundColor (Color.rgb(204,0,102));
+                                                    TextView textView=(TextView) row.findViewById(R.id.txtTableName);
+                                                    TextView textView1=(TextView) row.findViewById(R.id.txtTableDescription);
+                                                    TextView textView2=(TextView) row.findViewById(R.id.txtTableDeadline);
+
+
+                                                    textView.setTextColor(Color.WHITE);
+                                                    textView1.setTextColor(Color.WHITE);
+                                                    textView2.setTextColor(Color.WHITE);
+
+
+                                                }
+                                                else
+                                                {
+                                                    row.setBackgroundColor (Color.WHITE); // default coloe
+
+                                                }
+                                            }
+
+
+
+                                            return row;
+                                        }
+                                    });
 //
                                 }
 
@@ -335,8 +439,18 @@ public class MainMenu extends AppCompatActivity {
                         Toast.makeText(MainMenu.this,"Vui lòng nhập deadline đúng định dạng dd/MM/yyyy", Toast.LENGTH_SHORT).show();
                     }
                     else {
+                        String deadl="";
+                        try {
+                            Date date1=new SimpleDateFormat("dd/MM/yyyy").parse(editProjectDeadline.getText().toString());
+                            DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
+                            deadl=dateFormat.format(date1);
 
-                        compositeDisposable.add( iMyService.createProject(token,editProjectName.getText().toString(),editTableDescription.getText().toString(),editProjectDeadline.getText().toString())
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+
+
+                        compositeDisposable.add( iMyService.createProject(token,editProjectName.getText().toString(),editTableDescription.getText().toString(),deadl)
                                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
                                         new Consumer<String>() {
                                             @Override
