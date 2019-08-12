@@ -69,7 +69,10 @@
                         android:padding="8dp"
                         android:layout_margin="8dp"
                         android:backgroundTint="@color/colorBlue"
-                        android:src="@drawable/ic_add"/>
+                        android:src="@drawable/ic_add"
+                        android:id="@+id/demo"
+                        android:onClick="btnCreateItem"/>
+
                 </LinearLayout>
 
 

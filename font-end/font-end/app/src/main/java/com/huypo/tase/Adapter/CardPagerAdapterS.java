@@ -86,7 +86,7 @@ public class CardPagerAdapterS extends PagerAdapter implements CardAdapter {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 
-        View page = inflater.inflate(R.layout.activity_dash_board, null);
+        View page = inflater.inflate(R.layout.adapter, null);
 
         page.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){

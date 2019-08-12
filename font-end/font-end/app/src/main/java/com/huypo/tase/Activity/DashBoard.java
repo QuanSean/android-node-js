@@ -9,6 +9,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -63,9 +64,12 @@ public class DashBoard extends AppCompatActivity {
 
 
 
+    ArrayList<CardItemString> arrayList;
+
+
+
 
     private static Context context;
-
 
 
     @Override
@@ -75,6 +79,7 @@ public class DashBoard extends AppCompatActivity {
         Retrofit retrofitClient = RetrofitClient.getInstance();
 
         iMyService = retrofitClient.create(IMyService.class);
+        arrayList= new ArrayList<>();
 
         //get activity form context
         DashBoard.context = getApplicationContext();
@@ -97,7 +102,7 @@ public class DashBoard extends AppCompatActivity {
 
                                 JSONObject jsonObject = new JSONObject(reponse);
 //                                idProject=jsonObject.getString("_id");
-                                Toast.makeText(DashBoard.this,reponse, Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(DashBoard.this,reponse, Toast.LENGTH_SHORT).show();
 
                                 JSONArray  detail= jsonObject.getJSONArray("detail");
                                 ArrayList<Task> arrayListTask = new ArrayList<>();
@@ -163,29 +168,48 @@ public class DashBoard extends AppCompatActivity {
                                         }
                                     }
 
+
+
                                     for (Task t: arrayListTask)
                                     {
-                                            mCardAdapter.addCardItemS(new CardItemString( t.getTitle(), "",t.getItemTitle(),t.get_id()));
+                                            CardItemString cardItemString= new CardItemString( t.getTitle(), "",t.getItemTitle(),t.get_id());
+                                            arrayList.add(cardItemString);
+                                            mCardAdapter.addCardItemS(cardItemString);
                                     }
+
+//                                Toast.makeText(DashBoard.this,String.valueOf(mViewPager.getCurrentItem()), Toast.LENGTH_SHORT).show();
+//
+//                                    View v= mViewPager.getChildAt(mViewPager.getCurrentItem());
+//
+//                                    Button b= (Button) v.findViewById(R.id.demo);
+
+
                                 mCardShadowTransformer = new ShadowTranformer(mViewPager, mCardAdapter);
                                 mViewPager.setAdapter(mCardAdapter);
                                 mViewPager.setPageTransformer(false, mCardShadowTransformer);
                                 mViewPager.setOffscreenPageLimit(3);
 
 
-//
-//                                mViewPager.setOnClickListener(new mCardAdapter.() {
-//                                    @Override
-//                                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//
-//
-//                                    }
-//                                });
+                                mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                                    @Override
+                                    public void onPageScrolled(int i, float v, int i1) {
+
+                                    }
+
+                                    @Override
+                                    public void onPageSelected(int i) {
+
+                                        Toast.makeText(DashBoard.this,String.valueOf(i), Toast.LENGTH_SHORT).show();
 
 
+                                    }
+
+                                    @Override
+                                    public void onPageScrollStateChanged(int i) {
 
 
-
+                                    }
+                                });
 
                             }
                         }
@@ -195,7 +219,64 @@ public class DashBoard extends AppCompatActivity {
     public static Context getAppContext() {
         return DashBoard.context;
     }
+    public void btnCreateItem(View view)
+    {
+        final AlertDialog.Builder alert = new AlertDialog.Builder(DashBoard.this);
+        View viewtable = getLayoutInflater().inflate(R.layout.create_item_task,null);
+        final EditText editCreateTask = (EditText) viewtable.findViewById(R.id.editCreateItemTask);
 
+        Button btn_createItem = (Button)viewtable.findViewById(R.id.btnCreateItemTask);
+
+
+
+
+
+        int p=mViewPager.getCurrentItem();
+
+        CardItemString demo = arrayList.get(p);
+
+
+        alert.setView(viewtable);
+
+        final AlertDialog alertDialog = alert.create();
+        alertDialog.setCanceledOnTouchOutside(false);
+
+        btn_createItem.setOnClickListener( new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onClick(View v) {
+
+                if (editCreateTask.getText().toString().matches(""))
+                {
+                    Toast.makeText(DashBoard.this,"Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    compositeDisposable.add( iMyService.addItemTask(token,editCreateTask.getText().toString(),idProject,demo.getIdTask())
+                            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
+                                    new Consumer<String>() {
+                                        @Override
+                                        public void accept(String reponse) throws Exception
+                                        {
+
+
+                                        }
+                                    }
+                            ));
+                    Intent intent = getIntent();
+                    finish();
+                    startActivity(intent);
+
+                }
+
+
+
+            }
+        });
+        alert.show();
+
+
+    }
 
 
     public void btnCreateTask(View view){
@@ -213,7 +294,7 @@ public class DashBoard extends AppCompatActivity {
         final AlertDialog alertDialog = alert.create();
         alertDialog.setCanceledOnTouchOutside(false);
 
-        btn_create.setOnClickListener(new View.OnClickListener() {
+        btn_create.setOnClickListener( new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {

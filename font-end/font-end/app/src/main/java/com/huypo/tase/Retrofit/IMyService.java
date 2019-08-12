@@ -47,6 +47,10 @@ public interface IMyService {
     @FormUrlEncoded
     Observable<String> addTask(@Header("token") String token, @Field("id") String id, @Field("title") String title,@Field("deadline") String deadline);
 
+    @POST("/project/task/item")
+    @FormUrlEncoded
+    Observable<String> addItemTask(@Header("token") String token, @Field("title") String title,@Field("idProject") String idProject, @Field("idTask") int idTask);
+
 
     @GET("/project")
     @Headers({
