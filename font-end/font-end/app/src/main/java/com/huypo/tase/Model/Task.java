@@ -19,6 +19,7 @@ public class Task {
     }
 
     private ArrayList<Item> item;
+    private ArrayList<String> itemTitle;
 
 
     public Task(Integer _id, String title, Date deadline, Boolean delete, Boolean done, ArrayList<Item> item) {
@@ -28,6 +29,24 @@ public class Task {
         this.delete = delete;
         this.done = done;
         this.item = item;
+    }
+
+    public Task(Integer _id, String title, Date deadline, Boolean delete, Boolean done, ArrayList<Item> item, ArrayList<String> itemTitle) {
+        this._id = _id;
+        this.title = title;
+        this.deadline = deadline;
+        this.delete = delete;
+        this.done = done;
+        this.item = item;
+        this.itemTitle = itemTitle;
+    }
+
+    public ArrayList<String> getItemTitle() {
+        return itemTitle;
+    }
+
+    public void setItemTitle(ArrayList<String> itemTitle) {
+        this.itemTitle = itemTitle;
     }
 
     @Override

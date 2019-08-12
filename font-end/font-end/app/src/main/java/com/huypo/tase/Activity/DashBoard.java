@@ -3,9 +3,21 @@ package com.huypo.tase.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.AttributeSet;
+import android.util.Log;
+import android.view.GestureDetector;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,16 +36,18 @@ import com.huypo.tase.Utils.ShadowTranformer;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Retrofit;
-
 
 
 public class DashBoard extends AppCompatActivity {
@@ -44,29 +58,14 @@ public class DashBoard extends AppCompatActivity {
 
     private CardPagerAdapterS mCardAdapter;
     private ShadowTranformer mCardShadowTransformer;
-
-    String titlesText [] = {" Time Table 0", " Time Table 1", " Time Table 2", " Time Table 3", " Time Table 4", " Time Table 5",
-            " Time Table 6", " Time Table 7", " Time Table 8", " Time Table 9"};
-    String  detailsArray [] = {
-            "Time table details radom, Lorem ipsum characters ment for testing of programs and characters or displaying random informations",
-            "Time table details radom, Lorem ipsum characters ment for testing of programs and characters or displaying random informations",
-            "Time table details radom, Lorem ipsum characters ment for testing of programs and characters or displaying random informations",
-            "Time table details radom, Lorem ipsum characters ment for testing of programs and characters or displaying random informations",
-            "Time table details radom, Lorem ipsum characters ment for testing of programs and characters or displaying random informations",
-            "Time table details radom, Lorem ipsum characters ment for testing of programs and characters or displaying random informations",
-            "Time table details radom, Lorem ipsum characters ment for testing of programs and characters or displaying random informations",
-            "Time table details radom, Lorem ipsum characters ment for testing of programs and characters or displaying random informations",
-            "Time table details radom, Lorem ipsum characters ment for testing of programs and characters or displaying random informations",
-            "Time table details radom, Lorem ipsum characters ment for testing of programs and characters or displaying random informations",
-    };
-    ArrayList<String> a= new ArrayList<>();
-
-
+    String idProject="";
+    String token="";
 
 
 
 
     private static Context context;
+
 
 
     @Override
@@ -83,17 +82,10 @@ public class DashBoard extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle bundle = intent.getBundleExtra("Project");
         PersonalTable personalTable = (PersonalTable) bundle.getSerializable("Info");
-
-
-
-
+        idProject=personalTable.getIdProject();
+        token=personalTable.getToken();
         mViewPager = (ViewPager) findViewById(R.id.viewPager);
         mCardAdapter = new CardPagerAdapterS();
-
-
-        for (int i=0; i<titlesText.length; i++){
-
-        }
 
 
 
@@ -104,8 +96,12 @@ public class DashBoard extends AppCompatActivity {
                             public void accept(String reponse) throws Exception {
 
                                 JSONObject jsonObject = new JSONObject(reponse);
+//                                idProject=jsonObject.getString("_id");
+                                Toast.makeText(DashBoard.this,reponse, Toast.LENGTH_SHORT).show();
+
                                 JSONArray  detail= jsonObject.getJSONArray("detail");
                                 ArrayList<Task> arrayListTask = new ArrayList<>();
+                                ArrayList<Item> arrayListItem = new ArrayList<>();
 
 
 
@@ -113,10 +109,11 @@ public class DashBoard extends AppCompatActivity {
                                     for (int i=0;i<detail.length();i++)
                                     {
                                         JSONObject objectTask = detail.getJSONObject(i);
+
                                         JSONArray taskArray = objectTask.getJSONArray("task");
                                         if (taskArray.length()==0){
                                             TextView a=(TextView) findViewById(R.id.tvTask);
-                                            a.setText("Quản lí dự án tốt hơn bằng cách ãy tạo công việc mới");
+                                            a.setText("Quản lí dự án tốt hơn bằng cách hãy tạo công việc mới");
 
 
                                         }
@@ -131,11 +128,35 @@ public class DashBoard extends AppCompatActivity {
                                                 Boolean delete = new Boolean(taskObject.getString("delete"));
                                                 Integer _id=taskObject.getInt("_id");
                                                 Date deadline = new SimpleDateFormat("yyyy-MM-dd").parse(taskObject.getString("deadline"));
-
+                                                JSONArray  objectJSONArrayItem= taskObject.getJSONArray("item");
                                                 ArrayList<Item> items= new ArrayList<>();
-                                                Task t = new Task(_id,title,deadline,delete,done,items);
+                                                ArrayList<String> strings= new ArrayList<>();
+
+                                                if (objectJSONArrayItem.length()==0)
+                                                {
+
+                                                }
+                                                else
+                                                {
+                                                    for (int f=0;f<objectJSONArrayItem.length();f++)
+                                                    {
+                                                        JSONObject itemObject = objectJSONArrayItem.getJSONObject(f);
+                                                        Boolean deletedItem = new Boolean(itemObject.getString("deleted"));
+
+                                                        if (deletedItem==false)
+                                                        {
+                                                            Integer idItem= itemObject.getInt("_id");
+                                                            String titleItem=itemObject.getString("title");
+                                                            Boolean doneItem = new Boolean(itemObject.getString("done"));
+                                                            Item item = new Item(idItem,titleItem,doneItem,deletedItem);
+                                                            strings.add(item.getTitle());
+                                                            items.add(item);
+                                                        }
+                                                    }
+                                                }
+
+                                                Task t = new Task(_id,title,deadline,delete,done,items,strings);
                                                 arrayListTask.add(t);
-//                                                Toast.makeText(DashBoard.this,t.get.toString(), Toast.LENGTH_SHORT).show();
                                             }
 //                                            Toast.makeText(DashBoard.this,taskArray.get(0).toString(), Toast.LENGTH_SHORT).show();
 
@@ -144,20 +165,26 @@ public class DashBoard extends AppCompatActivity {
 
                                     for (Task t: arrayListTask)
                                     {
-                                            mCardAdapter.addCardItemS(new CardItemString( t.getTitle(), "",a));
+                                            mCardAdapter.addCardItemS(new CardItemString( t.getTitle(), "",t.getItemTitle(),t.get_id()));
                                     }
                                 mCardShadowTransformer = new ShadowTranformer(mViewPager, mCardAdapter);
-
                                 mViewPager.setAdapter(mCardAdapter);
                                 mViewPager.setPageTransformer(false, mCardShadowTransformer);
                                 mViewPager.setOffscreenPageLimit(3);
 
 
-
-//                                for (int i=0; i<titlesText.length; i++){
 //
-//                                    mCardAdapter.addCardItemS(new CardItemString( titlesText[i], detailsArray[i],a));
-//                                }
+//                                mViewPager.setOnClickListener(new mCardAdapter.() {
+//                                    @Override
+//                                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//
+//
+//                                    }
+//                                });
+
+
+
+
 
 
                             }
@@ -167,6 +194,58 @@ public class DashBoard extends AppCompatActivity {
     }
     public static Context getAppContext() {
         return DashBoard.context;
+    }
+
+
+
+    public void btnCreateTask(View view){
+        final AlertDialog.Builder alert = new AlertDialog.Builder(DashBoard.this);
+        View viewtable = getLayoutInflater().inflate(R.layout.create_task,null);
+
+//        final EditText editTextTable = (EditText)viewtable.findViewById(R.id.editTableName);
+//        Button btn_cancel = (Button)viewtable.findViewById(R.id.btnCancel);
+        Button btn_create = (Button)viewtable.findViewById(R.id.btnCreateTask);
+        final EditText editCreateTask = (EditText) viewtable.findViewById(R.id.editCreateTask);
+
+
+        alert.setView(viewtable);
+
+        final AlertDialog alertDialog = alert.create();
+        alertDialog.setCanceledOnTouchOutside(false);
+
+        btn_create.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onClick(View v) {
+
+                if (editCreateTask.getText().toString().matches(""))
+                {
+                    Toast.makeText(DashBoard.this,"Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    compositeDisposable.add( iMyService.addTask(token,idProject,editCreateTask.getText().toString(),"2018/01/01")
+                            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
+                                    new Consumer<String>() {
+                                        @Override
+                                        public void accept(String reponse) throws Exception
+                                        {
+
+
+                                        }
+                                    }
+                            ));
+                    Intent intent = getIntent();
+                    finish();
+                    startActivity(intent);
+
+                }
+
+
+
+            }
+        });
+        alert.show();
     }
     
 }

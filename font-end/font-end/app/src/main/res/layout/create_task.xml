@@ -11,39 +11,22 @@
         android:layout_height="wrap_content"
         android:id="@+id/txtTitle"
         android:textSize="22sp"
-        android:text="@string/txtTaoBang"
+        android:text="CREATE TABLE"
         android:textStyle="bold"
         android:textColor="#000"/>
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/TableName"
+        android:hint="Table name"
         android:layout_marginTop="15dp"
         android:inputType="text"
-        android:id="@+id/editProjectName"
+        android:id="@+id/editCreateTask"
         android:textSize="20sp"
         android:textColorHighlight="@color/colorAccent"/>
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Description"
-        android:layout_marginTop="15dp"
-        android:inputType="text"
-        android:id="@+id/editTableDescription"
-        android:textSize="20sp"
-        android:textColorHighlight="@color/colorAccent"/>
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Deadline: dd/MM/yyyy"
-        android:layout_marginTop="15dp"
-        android:inputType="text"
-        android:id="@+id/editProjectDeadline"
-        android:textSize="20sp"
-        android:textColorHighlight="@color/colorAccent"/>
+
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -51,14 +34,15 @@
         android:layout_marginTop="10dp">
 
         <Button
-            android:id="@+id/btnNewTable"
+            android:id="@+id/btnCreateTask"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:background="@color/colorWhite"
-            android:text="@string/NewTable"
+            android:text="New table"
             android:textColor="@color/colorAccent"
-            android:layout_alignParentEnd="true"/>
+            android:layout_alignParentEnd="true"
+            />
 
         <!--<Button-->
         <!--android:id="@+id/btnCancel"-->

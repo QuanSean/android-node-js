@@ -38,7 +38,7 @@
             android:padding="8dp"
             android:src="@drawable/ic_add"
             android:tint="@android:color/white"
-
+            android:onClick="btnCreateTask"
             />
     </LinearLayout>
 

@@ -1,7 +1,11 @@
 package com.huypo.tase.Adapter;
 
+import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.CardView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +13,7 @@ import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.huypo.tase.Activity.DashBoard;
 import com.huypo.tase.R;
@@ -30,6 +35,7 @@ public class CardPagerAdapterS extends PagerAdapter implements CardAdapter {
         mViews.add(null);
         mData.add(item);
     }
+
 
 
 
@@ -74,6 +80,25 @@ public class CardPagerAdapterS extends PagerAdapter implements CardAdapter {
         container.removeView((View) object);
         mViews.set(position, null);
     }
+    @Override
+    public Object instantiateItem(View collection, final int pos) { //have to make final so we can see it inside of onClick()
+        LayoutInflater inflater = (LayoutInflater) collection.getContext()
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+
+        View page = inflater.inflate(R.layout.activity_dash_board, null);
+
+        page.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                //this will log the page number that was click
+                Toast.makeText(DashBoard.getAppContext(),"Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+        ((ViewPager) collection).addView(page, 0);
+        return page;
+    }
 
     private void bind(CardItemString item, View view) {
         TextView titleTextView = (TextView) view.findViewById(R.id.titleTextView);
@@ -82,7 +107,6 @@ public class CardPagerAdapterS extends PagerAdapter implements CardAdapter {
 
         ArrayAdapter arrayAdapter = new ArrayAdapter(DashBoard.getAppContext(), android.R.layout.simple_list_item_1, item.getListTask());
         listView.setAdapter(arrayAdapter);
-
 
         titleTextView.setText(item.getTitle());
 //        contentTextView.setText(item.getText());

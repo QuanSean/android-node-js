@@ -1,7 +1,7 @@
 package com.huypo.tase.Model;
 
 public class Item {
-    private int id;
+    private Integer id;
     private String title;
     private Boolean done;
     private Boolean deleted;
@@ -14,7 +14,7 @@ public class Item {
         this.deleted = deleted;
     }
 
-    public Item(int id, String title, Boolean done, Boolean deleted) {
+    public Item(Integer id, String title, Boolean done, Boolean deleted) {
         this.id = id;
         this.title = title;
         this.done = done;
@@ -24,11 +24,11 @@ public class Item {
     public Item() {
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

@@ -14,10 +14,12 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,6 +53,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -105,6 +108,21 @@ public class MainMenu extends AppCompatActivity {
         token=user.getToken();
 
 //
+        ListAdapter listAdapter = listView.getAdapter();
+
+//        int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.UNSPECIFIED);
+
+//        View view = null;
+//        for (int i = 0; i < listAdapter.getCount(); i++) {
+//            view = listAdapter.getView(i, view, listView);
+////            if (i == 0)
+////                view.setLayoutParams(new ViewGroup.LayoutParams(desiredWidth, ViewGroup.LayoutParams.WRAP_CONTENT));
+//
+////            view.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
+////            totalHeight += view.getMeasuredHeight();
+//        }
+
+
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -184,9 +202,6 @@ public class MainMenu extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which){
                             case DialogInterface.BUTTON_POSITIVE:
-
-
-
                                 compositeDisposable.add( iMyService.deleteProject(token,p.getIdProject()
                                 )
                                         .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
@@ -202,10 +217,6 @@ public class MainMenu extends AppCompatActivity {
                                 Intent intent = getIntent();
                                 finish();
                                 startActivity(intent);
-
-
-
-
                                 break;
 
                             case DialogInterface.BUTTON_NEGATIVE:
@@ -220,9 +231,6 @@ public class MainMenu extends AppCompatActivity {
                 return true;
             }
         });
-
-
-
         compositeDisposable.add(iMyService.getProject(user.getToken())
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
                         new Consumer<String>() {
@@ -345,31 +353,34 @@ public class MainMenu extends AppCompatActivity {
                                             int month= cal1.get(Calendar.MONTH);
                                             int day= cal1.get(Calendar.DAY_OF_MONTH);
 
+
                                             if (personalTable2.getDone()==true)
                                             {
                                                 row.setBackgroundColor (0x989898);
                                                 TextView textView=(TextView) row.findViewById(R.id.txtTableName);
                                                 TextView textView1=(TextView) row.findViewById(R.id.txtTableDescription);
                                                 TextView textView2=(TextView) row.findViewById(R.id.txtTableDeadline);
-                                                textView.setTextColor(Color.WHITE);
+                                                textView.setTextColor(Color.BLACK);
                                                 textView1.setTextColor(Color.WHITE);
                                                 textView2.setTextColor(Color.WHITE);
                                             }
                                             else
                                             {
-                                                if (year==yearNow&&month==monthNow&&day-1==dayNow)
+                                                if (year==yearNow&&month==monthNow&&day-1>=dayNow)
                                                 {
+                                                    Toast.makeText(MainMenu.this,"true", Toast.LENGTH_SHORT).show();
                                                     row.setBackgroundColor (Color.rgb(204,0,102));
                                                     TextView textView=(TextView) row.findViewById(R.id.txtTableName);
                                                     TextView textView1=(TextView) row.findViewById(R.id.txtTableDescription);
                                                     TextView textView2=(TextView) row.findViewById(R.id.txtTableDeadline);
-                                                    textView.setTextColor(Color.WHITE);
+                                                    textView.setTextColor(Color.BLACK);
                                                     textView1.setTextColor(Color.WHITE);
                                                     textView2.setTextColor(Color.WHITE);
                                                 }
                                                 else
                                                 {
-                                                    row.setBackgroundColor (Color.WHITE); // default coloe
+
+                                                    row.setBackgroundColor (Color.rgb(237, 237, 237)); // default coloe
 
                                                 }
                                             }
@@ -384,6 +395,7 @@ public class MainMenu extends AppCompatActivity {
                             }
                         }
                 ));
+
     }
 
     public void btnNewTable(View view){
@@ -404,6 +416,8 @@ public class MainMenu extends AppCompatActivity {
 
         final AlertDialog alertDialog = alert.create();
         alertDialog.setCanceledOnTouchOutside(false);
+
+
 
 
 
