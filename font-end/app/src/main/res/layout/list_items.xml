@@ -1,39 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.card.MaterialCardView
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<android.support.design.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_marginRight="20dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="4dp"
-        android:background="@color/cardview_shadow_end_color">
+        >
         <ImageView
             android:id="@+id/imageTable"
-            android:layout_width="100dp"
-            android:layout_height="100dp" />
-        <TextView
-            android:id="@+id/txtTableName"
+            android:layout_width="0dp"
+            android:layout_height="0dp" />
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="13dp"
-            android:layout_alignTop="@id/imageTable"
-            android:layout_alignParentEnd="true"
-            android:layout_toEndOf="@+id/imageTable" />
+            android:padding="0dp"
+            android:background="#fff"
+            android:id="@+id/titleDiv">
+            <TextView
+                android:id="@+id/txtTableName"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="13dp"
+                android:layout_alignTop="@id/imageTable"
+                android:layout_alignParentEnd="true"
+                android:layout_toEndOf="@+id/imageTable"
+                android:textSize="24dp"
+                android:textColor="#000"
+                android:layout_marginLeft="20dp"
+                android:gravity="left|center"/>
+
+        </LinearLayout>
+
         <TextView
             android:id="@+id/txtTableDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:layout_below="@+id/txtTableName"
+            android:layout_below="@+id/titleDiv"
+            android:layout_marginLeft="20dp"
             android:layout_alignParentEnd="true"
-            android:layout_toEndOf="@+id/imageTable" />
+            android:layout_toEndOf="@+id/imageTable"
+            android:textSize="18dp"
+        />
+
         <TextView
             android:id="@+id/txtTableDeadline"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
             android:layout_below="@+id/txtTableDescription"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="20dp"
             android:layout_toEndOf="@+id/imageTable" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:ignore="MissingConstraints"
+            android:gravity="right|bottom"
+            android:layout_marginLeft="20dp"
+
+            android:layout_below="@+id/txtTableDeadline"
+            >
+
+
+            <android.support.design.widget.TabItem
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_margin="0dp"
+            android:padding="0dp"
+            android:background="@drawable/ic_delete_y"
+            android:id="@+id/btnDeleteProject"
+
+            />
+
+
+        </LinearLayout>
     </RelativeLayout>
 </android.support.design.card.MaterialCardView>

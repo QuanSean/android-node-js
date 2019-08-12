@@ -13,6 +13,8 @@ import com.huypo.tase.R;
 import org.w3c.dom.Text;
 
 import java.lang.reflect.Array;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class TableAdapter extends BaseAdapter {
@@ -52,10 +54,14 @@ public class TableAdapter extends BaseAdapter {
         TextView deadline = convertView.findViewById(R.id.txtTableDeadline);
 
         PersonalTable personalTable = personalTables.get(position);
-        images.setImageResource(personalTable.getImageTable());
+//        images.setImageResource(personalTable.getImageTable());
         tablename.setText(personalTable.getTxtTableName());
         description.setText(personalTable.getTxtTableDescription());
-        deadline.setText(personalTable.getTxtTableDeadline().toString());
+        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        String dl = formatter.format(personalTable.getTxtTableDeadline());
+
+
+        deadline.setText("Deadline: "+ dl);
 
         return convertView;
     }

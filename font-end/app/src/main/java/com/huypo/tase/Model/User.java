@@ -1,41 +1,47 @@
 package com.huypo.tase.Model;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
-public class User {
-    @SerializedName("_id")
-    @Expose
-    private Integer _id;
-    @SerializedName("email")
-    @Expose
-    private String email;
-    @SerializedName("password")
-    @Expose
-    private String password;
-    @SerializedName("deleted")
-    @Expose
-    private boolean deleted;
-    @SerializedName("token")
-    @Expose
-    private String token;
+import java.io.Serializable;
 
+public class User implements Serializable {
+    private Boolean result;
+    private String token="";
+    private String _id="";
+    private String email="";
+    private String name="";
+    private Boolean delete;
+
+    public  User (Boolean result, String token, String _id, String email, String name, Boolean delete)
+    {
+        this.result=result;
+        this.token=token;
+        this._id=_id;
+        this.email=email;
+        this.name=name;
+        this.delete=delete;
+    }
+
+    public  User(){};
+    public Boolean getResult() {
+        return result;
+    }
+
+    public void setResult(Boolean result) {
+        this.result = result;
+    }
+
+    public String getToken() {
+        return token;
+    }
 
     public void setToken(String token) {
         this.token = token;
     }
 
-
-
-    User(String email, String password) {
-        this.email = email;
-        this.password = password;
-    }
-
-    public Integer get_id() {
+    public String get_id() {
         return _id;
     }
 
-    public void set_id(Integer _id) {
+    public void set_id(String _id) {
         this._id = _id;
     }
 
@@ -47,19 +53,19 @@ public class User {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
+    public String getName() {
+        return name;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public boolean isDeleted() {
-        return deleted;
+    public Boolean getDelete() {
+        return delete;
     }
 
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
+    public void setDelete(Boolean delete) {
+        this.delete = delete;
     }
 }

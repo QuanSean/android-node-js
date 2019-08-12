@@ -10,4 +10,5 @@ public interface CardAdapter {
     CardView getCardViewAt(int position);
 
     int getCount();
+
 }

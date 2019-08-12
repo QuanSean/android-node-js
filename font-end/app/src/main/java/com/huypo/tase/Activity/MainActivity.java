@@ -8,12 +8,13 @@ import android.preference.PreferenceManager;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Pair;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,19 +22,25 @@ import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.security.ProviderInstaller;
 import com.huypo.tase.Model.Constants;
+import com.huypo.tase.Model.Project;
 import com.huypo.tase.Model.Respone;
+import com.huypo.tase.Model.User;
 import com.huypo.tase.R;
 import com.huypo.tase.Retrofit.IMyService;
 import com.huypo.tase.Retrofit.RetrofitClient;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 
 import javax.net.ssl.SSLContext;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.HttpException;
 import retrofit2.Retrofit;
@@ -48,6 +55,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private EditText edt_login_email, edt_login_password;
     private Button btn_login;
     private SharedPreferences mSharedPreferences;
+    ArrayAdapter arrayAdapter;
+    ListView list;
+    ArrayList<Project> projectArrayList = new ArrayList<>();
 
 
     CompositeDisposable compositeDisposable = new CompositeDisposable();
@@ -102,34 +112,43 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
-    private void loginUser(String email, String password) {
-        if (TextUtils.isEmpty(email)) {
-            Toast.makeText(this, "Email cannot be null", Toast.LENGTH_LONG).show();
-            return;
-        }
-        if (TextUtils.isEmpty(password)) {
-            Toast.makeText(this, "Password cannot be null", Toast.LENGTH_LONG).show();
-            return;
-        }
-        final Intent intent = new Intent(MainActivity.this, DashBoard.class);
+    private void loginUser (String email, String password)
+    {
+        compositeDisposable.add( iMyService.loginUser(email,password)
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
+                        new Consumer<String>() {
+                            @Override
+                            public void accept(String reponse) throws Exception
+                            {
+
+                                try{
+                                    JSONObject jsonObject= new JSONObject(reponse);
+                                    JSONObject jsonObject1= new JSONObject(jsonObject.getString("info"));
+
+                                    Boolean result  = new Boolean(jsonObject.getString("result"));
+
+                                    Boolean deleted  = new Boolean( jsonObject1.getString("deleted"));
 
 
-        compositeDisposable.add(iMyService.loginUser(email,password)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::handleResponse,this::handleError));
-//                .subscribe(new Consumer<User>() {
-//                               @Override
-//                               public void accept(User user) throws Exception {
-//                                   if(user !=null){
-//                                       Toast.makeText(MainActivity.this, ""+user, Toast.LENGTH_LONG).show();
-////                                       startActivity(intent);
-//                                   }else {
-//                                       Toast.makeText(MainActivity.this, "err", Toast.LENGTH_LONG).show();
-//                                   }
-//                               }
-//                           }
-//                ));
+                                    User user= new User(result,jsonObject.getString("token"),jsonObject1.getString("_id"),jsonObject1.getString("email"),jsonObject1.getString("name"),deleted);
+                                    User user1 = new User();
+
+                                    Intent intent= new Intent(MainActivity.this,MainMenu.class);
+                                    Bundle bundle= new Bundle();
+//                                    intent.putExtra("User",user);
+                                    bundle.putSerializable("Info",  user);
+                                    intent.putExtra("User", bundle);
+                                    startActivity(intent);
+
+
+                                }
+                                catch (Exception e){
+                                    Toast.makeText(MainActivity.this,"Ban da sai ten dang nhap hoac mat khau", Toast.LENGTH_SHORT).show();
+
+                                }
+                            }
+                        }
+                ));
     }
     private void login() {
 
@@ -137,6 +156,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         String email = edt_login_email.getText().toString();
         String password = edt_login_password.getText().toString();
+
 
         int err = 0;
 
@@ -209,6 +229,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             pairs[0] = new Pair<View, String>(txtLogin, "txtLogin");
             ActivityOptions activityOptions = ActivityOptions.makeSceneTransitionAnimation(MainActivity.this, pairs);
             startActivity(intent, activityOptions.toBundle());
+
+
         }
     }
 }

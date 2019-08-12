@@ -21,7 +21,27 @@
         android:hint="@string/TableName"
         android:layout_marginTop="15dp"
         android:inputType="text"
-        android:id="@+id/editTableName"
+        android:id="@+id/editProjectName"
+        android:textSize="20sp"
+        android:textColorHighlight="@color/colorAccent"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Description"
+        android:layout_marginTop="15dp"
+        android:inputType="text"
+        android:id="@+id/editTableDescription"
+        android:textSize="20sp"
+        android:textColorHighlight="@color/colorAccent"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Deadline: dd/MM/yyyy"
+        android:layout_marginTop="15dp"
+        android:inputType="text"
+        android:id="@+id/editProjectDeadline"
         android:textSize="20sp"
         android:textColorHighlight="@color/colorAccent"/>
 
@@ -41,14 +61,14 @@
             android:layout_alignParentEnd="true"/>
 
         <!--<Button-->
-            <!--android:id="@+id/btnCancel"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:padding="10dp"-->
-            <!--android:background="@color/colorWhite"-->
-            <!--android:text="@string/Cancel"-->
-            <!--android:textColor="@color/colorAccent"-->
-            <!--android:layout_toStartOf="@+id/btnNewTable"/>-->
+        <!--android:id="@+id/btnCancel"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:padding="10dp"-->
+        <!--android:background="@color/colorWhite"-->
+        <!--android:text="@string/Cancel"-->
+        <!--android:textColor="@color/colorAccent"-->
+        <!--android:layout_toStartOf="@+id/btnNewTable"/>-->
     </RelativeLayout>
 
 </LinearLayout>
