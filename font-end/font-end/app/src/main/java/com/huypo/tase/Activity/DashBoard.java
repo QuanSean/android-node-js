@@ -10,6 +10,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
+import android.text.Layout;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -25,6 +26,7 @@ import android.widget.Toast;
 import com.google.gson.JsonObject;
 import com.huypo.tase.Adapter.CardItemString;
 import com.huypo.tase.Adapter.CardPagerAdapterS;
+import com.huypo.tase.Adapter.ItemTaskAdapter;
 import com.huypo.tase.Model.Item;
 import com.huypo.tase.Model.PersonalTable;
 import com.huypo.tase.Model.Task;
@@ -61,7 +63,9 @@ public class DashBoard extends AppCompatActivity {
     private ShadowTranformer mCardShadowTransformer;
     String idProject="";
     String token="";
+    ItemTaskAdapter itemTaskAdapter;
 
+    ArrayList<String> arrayListItemTask;
 
 
     ArrayList<CardItemString> arrayList;
@@ -80,13 +84,14 @@ public class DashBoard extends AppCompatActivity {
 
         iMyService = retrofitClient.create(IMyService.class);
         arrayList= new ArrayList<>();
-
-        //get activity form context
+        //get activity for context
         DashBoard.context = getApplicationContext();
+
 
         Intent intent = getIntent();
         Bundle bundle = intent.getBundleExtra("Project");
         PersonalTable personalTable = (PersonalTable) bundle.getSerializable("Info");
+        arrayListItemTask= new ArrayList<>();
         idProject=personalTable.getIdProject();
         token=personalTable.getToken();
         mViewPager = (ViewPager) findViewById(R.id.viewPager);
@@ -156,6 +161,8 @@ public class DashBoard extends AppCompatActivity {
                                                             Item item = new Item(idItem,titleItem,doneItem,deletedItem);
                                                             strings.add(item.getTitle());
                                                             items.add(item);
+                                                            arrayListItemTask.add(item.getTitle());
+
                                                         }
                                                     }
                                                 }
@@ -169,10 +176,9 @@ public class DashBoard extends AppCompatActivity {
                                     }
 
 
-
                                     for (Task t: arrayListTask)
                                     {
-                                            CardItemString cardItemString= new CardItemString( t.getTitle(), "",t.getItemTitle(),t.get_id());
+                                            CardItemString cardItemString= new CardItemString( t.getTitle(), "",t.getItem(),t.get_id());
                                             arrayList.add(cardItemString);
                                             mCardAdapter.addCardItemS(cardItemString);
                                     }
@@ -266,7 +272,6 @@ public class DashBoard extends AppCompatActivity {
                     Intent intent = getIntent();
                     finish();
                     startActivity(intent);
-
                 }
 
 

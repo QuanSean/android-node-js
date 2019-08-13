@@ -5,17 +5,20 @@ import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.CardView;
+import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.huypo.tase.Activity.DashBoard;
+import com.huypo.tase.Model.Item;
 import com.huypo.tase.R;
 
 import java.util.ArrayList;
@@ -103,9 +106,32 @@ public class CardPagerAdapterS extends PagerAdapter implements CardAdapter {
     private void bind(CardItemString item, View view) {
         TextView titleTextView = (TextView) view.findViewById(R.id.titleTextView);
 //        TextView contentTextView = (TextView) view.findViewById(R.id.contentTextView);
-        ListView listView= (ListView) view.findViewById(R.id.listTask);
+        List<Item> a= new ArrayList<>();
 
-        ArrayAdapter arrayAdapter = new ArrayAdapter(DashBoard.getAppContext(), android.R.layout.simple_list_item_1, item.getListTask());
+        a.add(new Item(1,"a",false,false));
+        a.add(new Item(2,"b",false,false));
+        a.add(new Item(3,"c",false,false));
+
+        ListView listView= (ListView) view.findViewById(R.id.listTask);
+        ItemAdapterDemo i = new ItemAdapterDemo(DashBoard.getAppContext(),R.layout.item_tasks,a);
+
+        ArrayList<String> itemTitle=new ArrayList<>();
+
+        for (Item item1:item.getItems())
+        {
+            itemTitle.add(item1.getTitle());
+        }
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                Item iii = item.getItems().get(i);
+                Toast.makeText(DashBoard.getAppContext(),iii.getTitle(), Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+        ArrayAdapter arrayAdapter = new ArrayAdapter(DashBoard.getAppContext(), android.R.layout.simple_list_item_1, itemTitle);
         listView.setAdapter(arrayAdapter);
 
         titleTextView.setText(item.getTitle());

@@ -90,6 +90,8 @@ public class MainMenu extends AppCompatActivity {
         personalTables = ListDetails.getlist();
         Date date = new Date();
 
+
+
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         PersonalTable personalTable= new PersonalTable("Demo"," The technical term for this physical arrangement is codex (in the plural, codices)", calendar.getTime());
@@ -136,11 +138,127 @@ public class MainMenu extends AppCompatActivity {
                     public void run() {
                         if (click==1)
                         {
-                            Intent intent = new Intent(MainMenu.this, DashBoard.class);
-                            Bundle bundle= new Bundle();
-                            bundle.putSerializable("Info", p);
-                            intent.putExtra("Project", bundle);
-                            startActivity(intent);
+
+                            final AlertDialog.Builder alert = new AlertDialog.Builder(MainMenu.this);
+                            View viewtable = getLayoutInflater().inflate(R.layout.project_dialog,null);
+                            alert.setView(viewtable);
+
+
+                            final AlertDialog alertDialog = alert.create();
+                            alertDialog.setCanceledOnTouchOutside(false);
+
+
+                             TextView txtTitle = (TextView) viewtable.findViewById(R.id.txtTitle);
+                            Button btnShowProject = (Button)viewtable.findViewById(R.id.btnShowProject);
+                            Button btnUpdateStatusDone = (Button)viewtable.findViewById(R.id.btnUpdateStatusDone);
+                            Button btnDeletePr = (Button)viewtable.findViewById(R.id.btnDeletePr);
+                            btnShowProject.setOnClickListener(new View.OnClickListener() {
+                                @RequiresApi(api = Build.VERSION_CODES.O)
+                                @Override
+                                public void onClick(View v) {
+
+                                    Intent intent = new Intent(MainMenu.this, DashBoard.class);
+                                    Bundle bundle= new Bundle();
+                                    bundle.putSerializable("Info", p);
+                                    intent.putExtra("Project", bundle);
+                                    startActivity(intent);
+
+                                }
+
+
+                            });
+                            btnDeletePr.setOnClickListener(new View.OnClickListener() {
+                                @RequiresApi(api = Build.VERSION_CODES.O)
+                                @Override
+                                public void onClick(View v) {
+
+                                    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            switch (which){
+                                                case DialogInterface.BUTTON_POSITIVE:
+                                                    compositeDisposable.add( iMyService.deleteProject(token,p.getIdProject()
+                                                    )
+                                                            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
+                                                                    new Consumer<String>() {
+                                                                        @Override
+                                                                        public void accept(String reponse) throws Exception
+                                                                        {
+
+
+                                                                        }
+                                                                    }
+                                                            ));
+                                                    Intent intent = getIntent();
+                                                    finish();
+                                                    startActivity(intent);
+                                                    break;
+
+                                                case DialogInterface.BUTTON_NEGATIVE:
+                                                    break;
+                                            }
+                                        }
+                                    };
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(MainMenu.this);
+                                    builder.setMessage("Bạn có muốn xoá dự án "+p.getTitle()).setPositiveButton("Đồng ý", dialogClickListener)
+                                            .setNegativeButton("Không", dialogClickListener).show();
+                                }
+
+                            });
+                            btnUpdateStatusDone.setOnClickListener(new View.OnClickListener() {
+                                @RequiresApi(api = Build.VERSION_CODES.O)
+                                @Override
+                                public void onClick(View v) {
+
+                                    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            switch (which){
+                                                case DialogInterface.BUTTON_POSITIVE:
+
+                                                    compositeDisposable.add( iMyService.changeStatusDoneProject(token,p.getIdProject())
+                                                            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
+                                                                    new Consumer<String>() {
+                                                                        @Override
+                                                                        public void accept(String reponse) throws Exception
+                                                                        {
+
+
+                                                                        }
+                                                                    }
+                                                            ));
+
+
+                                                    Intent intent = getIntent();
+                                                    finish();
+                                                    startActivity(intent);
+
+
+
+
+                                                    break;
+
+                                                case DialogInterface.BUTTON_NEGATIVE:
+                                                    break;
+                                            }
+                                        }
+                                    };
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(MainMenu.this);
+                                    builder.setMessage("Bạn đã hoàn thành dự án "+p.getTitle()).setPositiveButton("Đồng ý", dialogClickListener)
+                                            .setNegativeButton("Không", dialogClickListener).show();
+
+                                }
+
+
+                            });
+
+
+                            txtTitle.setText(p.getTitle());
+
+                            alert.show();
+
+
+
                         }
                         if (click==2)
                         {
@@ -395,6 +513,9 @@ public class MainMenu extends AppCompatActivity {
                             }
                         }
                 ));
+
+    }
+    public void btnDeleteProject(View view){
 
     }
 

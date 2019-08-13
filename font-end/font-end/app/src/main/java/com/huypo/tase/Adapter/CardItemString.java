@@ -1,12 +1,14 @@
 package com.huypo.tase.Adapter;
 
+import com.huypo.tase.Model.Item;
+
 import java.util.ArrayList;
 
 public class CardItemString {
     private String mTextResource;
     private String mTitleResource;
     private Integer idTask;
-    private ArrayList<String> listItemTask;
+    private ArrayList<Item> items;
 
 
     public CardItemString(String title, String text) {
@@ -14,6 +16,13 @@ public class CardItemString {
         mTextResource = text;
     }
 
+    public ArrayList<Item> getItems() {
+        return items;
+    }
+
+    public void setItems(ArrayList<Item> items) {
+        this.items = items;
+    }
 
     public Integer getIdTask() {
         return idTask;
@@ -39,25 +48,25 @@ public class CardItemString {
         this.mTitleResource = mTitleResource;
     }
 
-    public ArrayList<String> getListTask() {
-        return listItemTask;
+    public ArrayList<Item> getListTask() {
+        return items;
     }
 
-    public void setListTask(ArrayList<String> listTask) {
-        this.listItemTask = listTask;
+    public void setListTask(ArrayList<Item> listTask) {
+        this.items = listTask;
     }
 
-    public CardItemString(String title, String text, ArrayList<String> listTask) {
+    public CardItemString(String title, String text, ArrayList<Item> listTask) {
         mTitleResource = title;
         mTextResource = text;
-        this.listItemTask = listTask;
+        this.items = listTask;
     }
 
 
-    public CardItemString(String title, String text, ArrayList<String> listTask, Integer idTask) {
+    public CardItemString(String title, String text, ArrayList<Item> listTask, Integer idTask) {
         mTitleResource = title;
         mTextResource = text;
-        this.listItemTask = listTask;
+        this.items = listTask;
         this.idTask=idTask;
     }
 
