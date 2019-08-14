@@ -126,7 +126,7 @@ public class MainMenu extends AppCompatActivity {
 
 
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listView.setOnItemClickListener( new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 click=click+1;
@@ -138,6 +138,7 @@ public class MainMenu extends AppCompatActivity {
                     public void run() {
                         if (click==1)
                         {
+
 
                             final AlertDialog.Builder alert = new AlertDialog.Builder(MainMenu.this);
                             View viewtable = getLayoutInflater().inflate(R.layout.project_dialog,null);
@@ -152,6 +153,8 @@ public class MainMenu extends AppCompatActivity {
                             Button btnShowProject = (Button)viewtable.findViewById(R.id.btnShowProject);
                             Button btnUpdateStatusDone = (Button)viewtable.findViewById(R.id.btnUpdateStatusDone);
                             Button btnDeletePr = (Button)viewtable.findViewById(R.id.btnDeletePr);
+                            Button btnAddPartner = (Button)viewtable.findViewById(R.id.btnAddPartner);
+
                             btnShowProject.setOnClickListener(new View.OnClickListener() {
                                 @RequiresApi(api = Build.VERSION_CODES.O)
                                 @Override
@@ -165,6 +168,77 @@ public class MainMenu extends AppCompatActivity {
 
                                 }
 
+
+                            });
+                            btnAddPartner.setOnClickListener(new View.OnClickListener() {
+                                @RequiresApi(api = Build.VERSION_CODES.O)
+                                @Override
+                                public void onClick(View v) {
+                                    final AlertDialog.Builder alert = new AlertDialog.Builder(MainMenu.this);
+                                    View viewtable = getLayoutInflater().inflate(R.layout.email_partner_dialog,null);
+
+
+                                    Button btn_create = (Button)viewtable.findViewById(R.id.btnEmailPartner);
+                                    final EditText editEmailPartner = (EditText) viewtable.findViewById(R.id.editEmailPartner);
+                                    alert.setView(viewtable);
+
+                                    final AlertDialog alertDialog = alert.create();
+                                    alertDialog.setCanceledOnTouchOutside(false);
+
+                                    btn_create.setOnClickListener(new View.OnClickListener() {
+                                        @RequiresApi(api = Build.VERSION_CODES.O)
+                                        @Override
+                                        public void onClick(View v) {
+
+                                            if (editEmailPartner.getText().toString().matches(""))
+                                            {
+                                                Toast.makeText(MainMenu.this,"Vui lòng nhập email", Toast.LENGTH_SHORT).show();
+
+                                            }
+                                            else
+                                            {
+                                                    compositeDisposable.add( iMyService.addEmailPartner(token,p.getIdProject(),editEmailPartner.getText().toString())
+                                                            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
+                                                                    new Consumer<String>() {
+                                                                        @Override
+                                                                        public void accept(String reponse) throws Exception
+                                                                        {
+
+                                                                            JSONObject jsonObject= new JSONObject(reponse);
+                                                                            try {
+                                                                                JSONObject jsonObject1= new JSONObject(jsonObject.getString("detail"));
+                                                                                Toast.makeText(MainMenu.this,"Đã thêm thành công", Toast.LENGTH_SHORT).show();
+                                                                                Intent intent = getIntent();
+                                                                                finish();
+                                                                                startActivity(intent);
+
+
+
+                                                                            }
+                                                                            catch (Exception e)
+                                                                            {
+                                                                                Toast.makeText(MainMenu.this,"Email không tồn tại", Toast.LENGTH_SHORT).show();
+
+
+                                                                            }
+
+                                                                        }
+                                                                    }
+                                                            ));
+//                                                    Intent intent = getIntent();
+////                                                    finish();
+////                                                    startActivity(intent);
+
+
+                                            }
+
+
+
+                                        }
+                                    });
+                                    alert.show();
+
+                                }
 
                             });
                             btnDeletePr.setOnClickListener(new View.OnClickListener() {

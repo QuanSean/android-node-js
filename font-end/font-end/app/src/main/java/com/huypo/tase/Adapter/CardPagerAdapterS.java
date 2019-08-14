@@ -1,10 +1,15 @@
 package com.huypo.tase.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
+
 import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,16 +18,24 @@ import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.huypo.tase.Activity.DashBoard;
+import com.huypo.tase.Activity.MainMenu;
 import com.huypo.tase.Model.Item;
 import com.huypo.tase.R;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 public class CardPagerAdapterS extends PagerAdapter implements CardAdapter {
     private List<CardView> mViews;
@@ -103,6 +116,7 @@ public class CardPagerAdapterS extends PagerAdapter implements CardAdapter {
         return page;
     }
 
+
     private void bind(CardItemString item, View view) {
         TextView titleTextView = (TextView) view.findViewById(R.id.titleTextView);
 //        TextView contentTextView = (TextView) view.findViewById(R.id.contentTextView);
@@ -121,15 +135,7 @@ public class CardPagerAdapterS extends PagerAdapter implements CardAdapter {
         {
             itemTitle.add(item1.getTitle());
         }
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                Item iii = item.getItems().get(i);
-                Toast.makeText(DashBoard.getAppContext(),iii.getTitle(), Toast.LENGTH_SHORT).show();
-
-            }
-        });
 
         ArrayAdapter arrayAdapter = new ArrayAdapter(DashBoard.getAppContext(), android.R.layout.simple_list_item_1, itemTitle);
         listView.setAdapter(arrayAdapter);
@@ -137,4 +143,6 @@ public class CardPagerAdapterS extends PagerAdapter implements CardAdapter {
         titleTextView.setText(item.getTitle());
 //        contentTextView.setText(item.getText());
     }
+
+
 }

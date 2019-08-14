@@ -20,6 +20,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -86,6 +87,7 @@ public class DashBoard extends AppCompatActivity {
         arrayList= new ArrayList<>();
         //get activity for context
         DashBoard.context = getApplicationContext();
+
 
 
         Intent intent = getIntent();
@@ -178,7 +180,7 @@ public class DashBoard extends AppCompatActivity {
 
                                     for (Task t: arrayListTask)
                                     {
-                                            CardItemString cardItemString= new CardItemString( t.getTitle(), "",t.getItem(),t.get_id());
+                                            CardItemString cardItemString= new CardItemString( t.getTitle(), "",t.getItem(),t.get_id(),token,idProject);
                                             arrayList.add(cardItemString);
                                             mCardAdapter.addCardItemS(cardItemString);
                                     }
@@ -204,16 +206,10 @@ public class DashBoard extends AppCompatActivity {
 
                                     @Override
                                     public void onPageSelected(int i) {
-
-                                        Toast.makeText(DashBoard.this,String.valueOf(i), Toast.LENGTH_SHORT).show();
-
-
                                     }
 
                                     @Override
                                     public void onPageScrollStateChanged(int i) {
-
-
                                     }
                                 });
 
@@ -229,6 +225,9 @@ public class DashBoard extends AppCompatActivity {
     {
         final AlertDialog.Builder alert = new AlertDialog.Builder(DashBoard.this);
         View viewtable = getLayoutInflater().inflate(R.layout.create_item_task,null);
+
+
+
         final EditText editCreateTask = (EditText) viewtable.findViewById(R.id.editCreateItemTask);
 
         Button btn_createItem = (Button)viewtable.findViewById(R.id.btnCreateItemTask);

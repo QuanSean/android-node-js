@@ -9,7 +9,25 @@ public class CardItemString {
     private String mTitleResource;
     private Integer idTask;
     private ArrayList<Item> items;
+    private String token;
+    private String idProject;
 
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public String getIdProject() {
+        return idProject;
+    }
+
+    public void setIdProject(String idProject) {
+        this.idProject = idProject;
+    }
 
     public CardItemString(String title, String text) {
         mTitleResource = title;
@@ -68,6 +86,15 @@ public class CardItemString {
         mTextResource = text;
         this.items = listTask;
         this.idTask=idTask;
+    }
+
+    public CardItemString(String title, String text, ArrayList<Item> listTask, Integer idTask, String token, String idProject) {
+        mTitleResource = title;
+        mTextResource = text;
+        this.items = listTask;
+        this.idTask=idTask;
+        this.token = token;
+        this.idProject = idProject;
     }
 
     public String getText() {
