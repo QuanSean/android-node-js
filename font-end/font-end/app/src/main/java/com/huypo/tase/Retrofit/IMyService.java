@@ -56,8 +56,10 @@ public interface IMyService {
     Observable<String> addEmailPartner(@Header("token") String token, @Field("id") String id,@Field("email") String email);
 
     @POST("/project/getProjectPartner")
-    @FormUrlEncoded
-    Observable<String> showListProjectPartner(@Header("token") String token);
+    @Headers({
+            "Accept:application/json"
+    })
+    Observable<String> getProjectPartner(@Header("token") String token);
 
 
     @GET("/project")

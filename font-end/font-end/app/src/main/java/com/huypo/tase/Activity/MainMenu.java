@@ -534,7 +534,7 @@ public class MainMenu extends AppCompatActivity {
                                     }
                                     TableAdapter tableAdapter;
 
-                                    listView.setAdapter(new TableAdapter(MainMenu.this, personalTables1){
+                                    listView.setAdapter( new TableAdapter(MainMenu.this, personalTables1){
                                         @Override
                                         public View getView(int position, View convertView, ViewGroup parent) {
                                             View row = super.getView(position, convertView, parent);
@@ -609,6 +609,8 @@ public class MainMenu extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.navigation_partner:
                     Intent intent= new Intent(MainMenu.this, project_partner.class);
+
+                    intent.putExtra("token", token);
                     startActivity(intent);
                     return true;
 
