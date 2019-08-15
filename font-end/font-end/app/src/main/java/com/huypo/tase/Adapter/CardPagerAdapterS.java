@@ -1,25 +1,41 @@
 package com.huypo.tase.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
+
+import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.huypo.tase.Activity.DashBoard;
+import com.huypo.tase.Activity.MainMenu;
+import com.huypo.tase.Model.Item;
 import com.huypo.tase.R;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 public class CardPagerAdapterS extends PagerAdapter implements CardAdapter {
     private List<CardView> mViews;
@@ -86,7 +102,7 @@ public class CardPagerAdapterS extends PagerAdapter implements CardAdapter {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 
-        View page = inflater.inflate(R.layout.activity_dash_board, null);
+        View page = inflater.inflate(R.layout.adapter, null);
 
         page.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
@@ -100,15 +116,33 @@ public class CardPagerAdapterS extends PagerAdapter implements CardAdapter {
         return page;
     }
 
+
     private void bind(CardItemString item, View view) {
         TextView titleTextView = (TextView) view.findViewById(R.id.titleTextView);
 //        TextView contentTextView = (TextView) view.findViewById(R.id.contentTextView);
-        ListView listView= (ListView) view.findViewById(R.id.listTask);
+        List<Item> a= new ArrayList<>();
 
-        ArrayAdapter arrayAdapter = new ArrayAdapter(DashBoard.getAppContext(), android.R.layout.simple_list_item_1, item.getListTask());
+        a.add(new Item(1,"a",false,false));
+        a.add(new Item(2,"b",false,false));
+        a.add(new Item(3,"c",false,false));
+
+        ListView listView= (ListView) view.findViewById(R.id.listTask);
+        ItemAdapterDemo i = new ItemAdapterDemo(DashBoard.getAppContext(),R.layout.item_tasks,a);
+
+        ArrayList<String> itemTitle=new ArrayList<>();
+
+        for (Item item1:item.getItems())
+        {
+            itemTitle.add(item1.getTitle());
+        }
+
+
+        ArrayAdapter arrayAdapter = new ArrayAdapter(DashBoard.getAppContext(), android.R.layout.simple_list_item_1, itemTitle);
         listView.setAdapter(arrayAdapter);
 
         titleTextView.setText(item.getTitle());
 //        contentTextView.setText(item.getText());
     }
+
+
 }

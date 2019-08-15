@@ -5,11 +5,17 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
@@ -89,6 +95,9 @@ public class MainMenu extends AppCompatActivity {
         listView = findViewById(R.id.listPersonalTable);
         personalTables = ListDetails.getlist();
         Date date = new Date();
+        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.bottom_navigation_view);
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
@@ -124,7 +133,7 @@ public class MainMenu extends AppCompatActivity {
 
 
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listView.setOnItemClickListener( new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 click=click+1;
@@ -136,11 +145,201 @@ public class MainMenu extends AppCompatActivity {
                     public void run() {
                         if (click==1)
                         {
-                            Intent intent = new Intent(MainMenu.this, DashBoard.class);
-                            Bundle bundle= new Bundle();
-                            bundle.putSerializable("Info", p);
-                            intent.putExtra("Project", bundle);
-                            startActivity(intent);
+
+
+                            final AlertDialog.Builder alert = new AlertDialog.Builder(MainMenu.this);
+                            View viewtable = getLayoutInflater().inflate(R.layout.project_dialog,null);
+                            alert.setView(viewtable);
+
+
+                            final AlertDialog alertDialog = alert.create();
+                            alertDialog.setCanceledOnTouchOutside(false);
+
+
+                             TextView txtTitle = (TextView) viewtable.findViewById(R.id.txtTitle);
+                            Button btnShowProject = (Button)viewtable.findViewById(R.id.btnShowProject);
+                            Button btnUpdateStatusDone = (Button)viewtable.findViewById(R.id.btnUpdateStatusDone);
+                            Button btnDeletePr = (Button)viewtable.findViewById(R.id.btnDeletePr);
+                            Button btnAddPartner = (Button)viewtable.findViewById(R.id.btnAddPartner);
+
+                            btnShowProject.setOnClickListener(new View.OnClickListener() {
+                                @RequiresApi(api = Build.VERSION_CODES.O)
+                                @Override
+                                public void onClick(View v) {
+
+                                    Intent intent = new Intent(MainMenu.this, DashBoard.class);
+                                    Bundle bundle= new Bundle();
+                                    bundle.putSerializable("Info", p);
+                                    intent.putExtra("Project", bundle);
+                                    startActivity(intent);
+
+                                }
+
+
+                            });
+                            btnAddPartner.setOnClickListener(new View.OnClickListener() {
+                                @RequiresApi(api = Build.VERSION_CODES.O)
+                                @Override
+                                public void onClick(View v) {
+                                    final AlertDialog.Builder alert = new AlertDialog.Builder(MainMenu.this);
+                                    View viewtable = getLayoutInflater().inflate(R.layout.email_partner_dialog,null);
+
+
+                                    Button btn_create = (Button)viewtable.findViewById(R.id.btnEmailPartner);
+                                    final EditText editEmailPartner = (EditText) viewtable.findViewById(R.id.editEmailPartner);
+                                    alert.setView(viewtable);
+
+                                    final AlertDialog alertDialog = alert.create();
+                                    alertDialog.setCanceledOnTouchOutside(false);
+
+                                    btn_create.setOnClickListener(new View.OnClickListener() {
+                                        @RequiresApi(api = Build.VERSION_CODES.O)
+                                        @Override
+                                        public void onClick(View v) {
+
+                                            if (editEmailPartner.getText().toString().matches(""))
+                                            {
+                                                Toast.makeText(MainMenu.this,"Vui lòng nhập email", Toast.LENGTH_SHORT).show();
+
+                                            }
+                                            else
+                                            {
+                                                    compositeDisposable.add( iMyService.addEmailPartner(token,p.getIdProject(),editEmailPartner.getText().toString())
+                                                            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
+                                                                    new Consumer<String>() {
+                                                                        @Override
+                                                                        public void accept(String reponse) throws Exception
+                                                                        {
+
+                                                                            JSONObject jsonObject= new JSONObject(reponse);
+                                                                            try {
+                                                                                JSONObject jsonObject1= new JSONObject(jsonObject.getString("detail"));
+                                                                                Toast.makeText(MainMenu.this,"Đã thêm thành công", Toast.LENGTH_SHORT).show();
+                                                                                Intent intent = getIntent();
+                                                                                finish();
+                                                                                startActivity(intent);
+
+
+
+                                                                            }
+                                                                            catch (Exception e)
+                                                                            {
+                                                                                Toast.makeText(MainMenu.this,"Email không tồn tại", Toast.LENGTH_SHORT).show();
+
+
+                                                                            }
+
+                                                                        }
+                                                                    }
+                                                            ));
+//                                                    Intent intent = getIntent();
+////                                                    finish();
+////                                                    startActivity(intent);
+
+
+                                            }
+
+
+
+                                        }
+                                    });
+                                    alert.show();
+
+                                }
+
+                            });
+                            btnDeletePr.setOnClickListener(new View.OnClickListener() {
+                                @RequiresApi(api = Build.VERSION_CODES.O)
+                                @Override
+                                public void onClick(View v) {
+
+                                    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            switch (which){
+                                                case DialogInterface.BUTTON_POSITIVE:
+                                                    compositeDisposable.add( iMyService.deleteProject(token,p.getIdProject()
+                                                    )
+                                                            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
+                                                                    new Consumer<String>() {
+                                                                        @Override
+                                                                        public void accept(String reponse) throws Exception
+                                                                        {
+
+
+                                                                        }
+                                                                    }
+                                                            ));
+                                                    Intent intent = getIntent();
+                                                    finish();
+                                                    startActivity(intent);
+                                                    break;
+
+                                                case DialogInterface.BUTTON_NEGATIVE:
+                                                    break;
+                                            }
+                                        }
+                                    };
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(MainMenu.this);
+                                    builder.setMessage("Bạn có muốn xoá dự án "+p.getTitle()).setPositiveButton("Đồng ý", dialogClickListener)
+                                            .setNegativeButton("Không", dialogClickListener).show();
+                                }
+
+                            });
+                            btnUpdateStatusDone.setOnClickListener(new View.OnClickListener() {
+                                @RequiresApi(api = Build.VERSION_CODES.O)
+                                @Override
+                                public void onClick(View v) {
+
+                                    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            switch (which){
+                                                case DialogInterface.BUTTON_POSITIVE:
+
+                                                    compositeDisposable.add( iMyService.changeStatusDoneProject(token,p.getIdProject())
+                                                            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
+                                                                    new Consumer<String>() {
+                                                                        @Override
+                                                                        public void accept(String reponse) throws Exception
+                                                                        {
+
+
+                                                                        }
+                                                                    }
+                                                            ));
+
+
+                                                    Intent intent = getIntent();
+                                                    finish();
+                                                    startActivity(intent);
+
+
+
+
+                                                    break;
+
+                                                case DialogInterface.BUTTON_NEGATIVE:
+                                                    break;
+                                            }
+                                        }
+                                    };
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(MainMenu.this);
+                                    builder.setMessage("Bạn đã hoàn thành dự án "+p.getTitle()).setPositiveButton("Đồng ý", dialogClickListener)
+                                            .setNegativeButton("Không", dialogClickListener).show();
+
+                                }
+
+
+                            });
+
+
+                            txtTitle.setText(p.getTitle());
+
+                            alert.show();
+
+
+
                         }
                         if (click==2)
                         {
@@ -397,7 +596,26 @@ public class MainMenu extends AppCompatActivity {
                 ));
 
     }
+    public void btnDeleteProject(View view){
 
+    }
+
+    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+            = new BottomNavigationView.OnNavigationItemSelectedListener() {
+
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            Fragment fragment;
+            switch (item.getItemId()) {
+                case R.id.navigation_partner:
+                    Intent intent= new Intent(MainMenu.this, project_partner.class);
+                    startActivity(intent);
+                    return true;
+
+            }
+            return false;
+        }
+    };
     public void btnNewTable(View view){
         final AlertDialog.Builder alert = new AlertDialog.Builder(MainMenu.this);
         View viewtable = getLayoutInflater().inflate(R.layout.table_dialog,null);
@@ -505,4 +723,26 @@ public class MainMenu extends AppCompatActivity {
 
         return false;
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.bottom_navigation, menu);
+
+        return true;
+    }
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//
+//
+//        if (item.getItemId()==R.id.navigation_home){
+//            Toast.makeText(this, "Action Item", Toast.LENGTH_SHORT).show();
+//        }
+//
+//        if (item.getItemId()==R.id.navigation_notification){
+//            Toast.makeText(this, "Hnstructions Item", Toast.LENGTH_SHORT).show();
+//        }
+//
+//        return super.onOptionsItemSelected(item);
+//    }
 }

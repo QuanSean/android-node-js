@@ -11,39 +11,41 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/background">
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/b"
-            >
+            android:background="@drawable/b">
             <!--<android.support.v7.widget.AppCompatTextView-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:elevation="5dp"-->
-                <!--android:id="@+id/txtTitle"-->
-                <!--android:textSize="17sp"-->
-                <!--android:text="@string/txtCaNhan"-->
-                <!--android:textColor="@color/common_google_signin_btn_text_dark_focused"-->
-                <!--android:background="@color/colorWhite"-->
-                <!--android:padding="10dp"/>-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:elevation="5dp"-->
+            <!--android:id="@+id/txtTitle"-->
+            <!--android:textSize="17sp"-->
+            <!--android:text="@string/txtCaNhan"-->
+            <!--android:textColor="@color/common_google_signin_btn_text_dark_focused"-->
+            <!--android:background="@color/colorWhite"-->
+            <!--android:padding="10dp"/>-->
             <TextView
+                android:id="@+id/tb"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/tb"
-                android:textColor="#fff"/>
+                android:textColor="#fff" />
+
             <ListView
                 android:id="@+id/listPersonalTable"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@id/txtTitle"
-                android:background="@android:color/transparent"
                 android:layout_marginLeft="15dp"
-                android:layout_marginTop="20dp"
                 android:layout_marginRight="15dp"
                 android:layout_marginBottom="90dp"
-                android:headerDividersEnabled="false"
+                android:background="@android:color/transparent"
+                android:clipToPadding="false"
+                android:divider="@android:color/transparent"
                 android:dividerHeight="20dp"
-                >
+                android:headerDividersEnabled="false"
+                android:paddingTop="20dp">
 
                 <!--<ListView-->
                 <!--android:id="@+id/listPersonalTable"-->
@@ -70,6 +72,9 @@
                 app:itemIconTint="@color/colorPink"
                 app:itemTextColor="@color/colorPink"
                 app:menu="@menu/bottom_navigation" />
+
+
+
         </android.support.design.bottomappbar.BottomAppBar>
 
         <android.support.design.widget.FloatingActionButton
