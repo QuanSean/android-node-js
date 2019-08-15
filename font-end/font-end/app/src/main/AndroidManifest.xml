@@ -3,6 +3,7 @@
     package="com.huypo.tase">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"
@@ -12,12 +13,16 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Activity.project_partner"
-            android:theme="@style/AppTheme.FullScreen"
-            ></activity>
+
+        <activity android:name=".Activity.AlarmActivity">
+
+        </activity>
+        <activity
+            android:name=".Activity.project_partner"
+            android:theme="@style/AppTheme.FullScreen" />
         <activity
             android:name=".Activity.MainMenu"
-            android:theme="@style/AppTheme.FullScreen"></activity>
+            android:theme="@style/AppTheme.FullScreen" />
         <activity
             android:name=".Activity.DashBoard"
             android:theme="@style/AppTheme.FullScreen" />
@@ -33,6 +38,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <receiver android:name=".Utils.Broadcast"
+            >
+
+        </receiver>
     </application>
 
 </manifest>

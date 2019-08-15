@@ -73,8 +73,9 @@ public class MainMenu extends AppCompatActivity {
 
      ListView listView;
      ArrayList<PersonalTable> personalTables;
-
-
+//notification
+    public static final String NOTIFICATION_CHANNEL_ID = "10001" ;
+    private final static String default_notification_channel_id = "default" ;
 
      TextView TableName;
     CompositeDisposable compositeDisposable = new CompositeDisposable();
@@ -611,7 +612,10 @@ public class MainMenu extends AppCompatActivity {
                     Intent intent= new Intent(MainMenu.this, project_partner.class);
                     startActivity(intent);
                     return true;
-
+                case R.id.navigation_notification:
+                    Intent intent1= new Intent(MainMenu.this, AlarmActivity.class);
+                    startActivity(intent1);
+                    return true;
             }
             return false;
         }
