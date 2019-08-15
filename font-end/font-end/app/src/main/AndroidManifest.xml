@@ -12,7 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Activity.project_partner"></activity>
+        <activity android:name=".Activity.project_partner"
+            android:theme="@style/AppTheme.FullScreen"
+            ></activity>
         <activity
             android:name=".Activity.MainMenu"
             android:theme="@style/AppTheme.FullScreen"></activity>

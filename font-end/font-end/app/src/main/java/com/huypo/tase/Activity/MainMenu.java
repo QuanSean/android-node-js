@@ -5,11 +5,17 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
@@ -89,7 +95,8 @@ public class MainMenu extends AppCompatActivity {
         listView = findViewById(R.id.listPersonalTable);
         personalTables = ListDetails.getlist();
         Date date = new Date();
-
+        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.bottom_navigation_view);
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
 
         Calendar calendar = Calendar.getInstance();
@@ -593,6 +600,22 @@ public class MainMenu extends AppCompatActivity {
 
     }
 
+    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+            = new BottomNavigationView.OnNavigationItemSelectedListener() {
+
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            Fragment fragment;
+            switch (item.getItemId()) {
+                case R.id.navigation_partner:
+                    Intent intent= new Intent(MainMenu.this, project_partner.class);
+                    startActivity(intent);
+                    return true;
+
+            }
+            return false;
+        }
+    };
     public void btnNewTable(View view){
         final AlertDialog.Builder alert = new AlertDialog.Builder(MainMenu.this);
         View viewtable = getLayoutInflater().inflate(R.layout.table_dialog,null);
@@ -700,4 +723,26 @@ public class MainMenu extends AppCompatActivity {
 
         return false;
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.bottom_navigation, menu);
+
+        return true;
+    }
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//
+//
+//        if (item.getItemId()==R.id.navigation_home){
+//            Toast.makeText(this, "Action Item", Toast.LENGTH_SHORT).show();
+//        }
+//
+//        if (item.getItemId()==R.id.navigation_notification){
+//            Toast.makeText(this, "Hnstructions Item", Toast.LENGTH_SHORT).show();
+//        }
+//
+//        return super.onOptionsItemSelected(item);
+//    }
 }
