@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
@@ -11,21 +12,15 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-
-import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,7 +30,6 @@ import com.huypo.tase.Model.Item;
 import com.huypo.tase.Model.ListDetails;
 import com.huypo.tase.Model.PersonalTable;
 import com.huypo.tase.Model.Project;
-import com.huypo.tase.Model.Respone;
 import com.huypo.tase.Model.Task;
 import com.huypo.tase.Model.User;
 import com.huypo.tase.R;
@@ -46,7 +40,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -59,15 +52,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-import java.util.TimeZone;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Retrofit;
-
-import static android.media.CamcorderProfile.get;
 
 public class MainMenu extends AppCompatActivity {
 
@@ -116,23 +106,6 @@ public class MainMenu extends AppCompatActivity {
         User user = (User) bundle.getSerializable("Info");
         token=user.getToken();
 
-//
-        ListAdapter listAdapter = listView.getAdapter();
-
-//        int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.UNSPECIFIED);
-
-//        View view = null;
-//        for (int i = 0; i < listAdapter.getCount(); i++) {
-//            view = listAdapter.getView(i, view, listView);
-////            if (i == 0)
-////                view.setLayoutParams(new ViewGroup.LayoutParams(desiredWidth, ViewGroup.LayoutParams.WRAP_CONTENT));
-//
-////            view.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
-////            totalHeight += view.getMeasuredHeight();
-//        }
-
-
-
         listView.setOnItemClickListener( new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -166,7 +139,6 @@ public class MainMenu extends AppCompatActivity {
                                 @RequiresApi(api = Build.VERSION_CODES.O)
                                 @Override
                                 public void onClick(View v) {
-
                                     Intent intent = new Intent(MainMenu.this, DashBoard.class);
                                     Bundle bundle= new Bundle();
                                     bundle.putSerializable("Info", p);
@@ -232,10 +204,6 @@ public class MainMenu extends AppCompatActivity {
                                                                         }
                                                                     }
                                                             ));
-//                                                    Intent intent = getIntent();
-////                                                    finish();
-////                                                    startActivity(intent);
-
 
                                             }
 

@@ -1,8 +1,6 @@
 package com.huypo.tase.Retrofit;
 
 import io.reactivex.Observable;
-
-import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -60,6 +58,10 @@ public interface IMyService {
             "Accept:application/json"
     })
     Observable<String> getProjectPartner(@Header("token") String token);
+
+    @POST("/project/partner/delete")
+    @FormUrlEncoded
+    Observable<String> deleteProjectPartner(@Header("token") String token,@Field("id") String id);
 
 
     @GET("/project")

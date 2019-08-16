@@ -11,7 +11,7 @@ public class RetrofitClient {
         if (instance==null)
 
             instance= new Retrofit.Builder()
-                    .baseUrl("http://192.168.1.106:2409/")
+                    .baseUrl("https://tase-nodejs.herokuapp.com")
 //                    .baseUrl("https://android-app-tase.herokuapp.com/")
 
                     .addConverterFactory(ScalarsConverterFactory.create())

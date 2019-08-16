@@ -9,6 +9,7 @@ public class PersonalTable implements Serializable {
     private Date txtTableDeadline;
     private String token;
     private String idProject;
+
     private String idTask;
     private String title;
     private Boolean done;

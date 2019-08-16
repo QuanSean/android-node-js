@@ -1,6 +1,5 @@
 package com.huypo.tase.Model;
 
-import java.util.ArrayList;
 import java.util.Date;
 
 public class Project_Partner {
@@ -12,8 +11,29 @@ public class Project_Partner {
     private Boolean done;
     private Date deadline;
     private Boolean delete;
+    private String idProject;
 
     public Project_Partner(String token, String _id, String _idUser, String title, String description, Boolean done, Date deadline, Boolean delete) {
+        this.token = token;
+        this._id = _id;
+
+        this._idUser = _idUser;
+        this.title = title;
+        this.description = description;
+        this.done = done;
+        this.deadline = deadline;
+        this.delete = delete;
+    }
+
+    public String getIdProject() {
+        return idProject;
+    }
+
+    public void setIdProject(String idProject) {
+        this.idProject = idProject;
+    }
+
+    public Project_Partner(String token, String _id, String _idUser, String title, String description, Boolean done, Date deadline, Boolean delete, String idProject) {
         this.token = token;
         this._id = _id;
         this._idUser = _idUser;
@@ -22,6 +42,7 @@ public class Project_Partner {
         this.done = done;
         this.deadline = deadline;
         this.delete = delete;
+        this.idProject = idProject;
     }
 
     public String getToken() {

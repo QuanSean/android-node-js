@@ -1,7 +1,6 @@
 package com.huypo.tase.Adapter;
 
 import android.content.Context;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -58,7 +57,7 @@ public class ItemProjectPartner extends BaseAdapter {
         String format = formatter.format(project_partners.get(position).getDeadline());
         deadlineItemProject.setText(format);
 
-        personName.setText(project_partners.get(position).get_idUser());
+        personName.setText("Author: "+project_partners.get(position).get_idUser());
         return convertView;
     }
 }
