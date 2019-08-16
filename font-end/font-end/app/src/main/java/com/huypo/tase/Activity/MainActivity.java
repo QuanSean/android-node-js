@@ -4,10 +4,10 @@ import android.app.ActivityOptions;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Pair;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -59,9 +59,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ListView list;
     ArrayList<Project> projectArrayList = new ArrayList<>();
 
-
+//    private Socket mSocket;
+//    {
+//        try {
+//            mSocket = IO.socket("http://192.168.1.106:2409/");
+//        } catch (URISyntaxException e) {}
+//    }
     CompositeDisposable compositeDisposable = new CompositeDisposable();
     IMyService iMyService;
+
 
     @Override
     protected void onStop() {
@@ -73,6 +79,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+//        mSocket.connect();
+
+
         init();
         initSharedPreferences();
         login();
@@ -133,8 +143,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     User user= new User(result,jsonObject.getString("token"),jsonObject1.getString("_id"),jsonObject1.getString("email"),jsonObject1.getString("name"),deleted);
                                     User user1 = new User();
 
+
+
+
                                     Intent intent= new Intent(MainActivity.this,MainMenu.class);
                                     Bundle bundle= new Bundle();
+
 //                                    intent.putExtra("User",user);
                                     bundle.putSerializable("Info",  user);
                                     intent.putExtra("User", bundle);
