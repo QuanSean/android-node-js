@@ -15,9 +15,14 @@ import android.widget.Toast;
 import com.huypo.tase.Activity.DashBoard;
 import com.huypo.tase.Model.Item;
 import com.huypo.tase.R;
+import com.huypo.tase.Retrofit.IMyService;
+import com.huypo.tase.Retrofit.RetrofitClient;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.reactivex.disposables.CompositeDisposable;
+import retrofit2.Retrofit;
 
 public class CardPagerAdapterS extends PagerAdapter implements CardAdapter {
     private List<CardView> mViews;
@@ -97,9 +102,14 @@ public class CardPagerAdapterS extends PagerAdapter implements CardAdapter {
         ((ViewPager) collection).addView(page, 0);
         return page;
     }
+    CompositeDisposable compositeDisposable = new CompositeDisposable();
+    IMyService iMyService;
+    String name;
 
 
     private void bind(CardItemString item, View view) {
+        Retrofit retrofitClient = RetrofitClient.getInstance();
+        iMyService = retrofitClient.create(IMyService.class);
         TextView titleTextView = (TextView) view.findViewById(R.id.titleTextView);
 //        TextView contentTextView = (TextView) view.findViewById(R.id.contentTextView);
         List<Item> a= new ArrayList<>();
@@ -117,7 +127,6 @@ public class CardPagerAdapterS extends PagerAdapter implements CardAdapter {
         {
             itemTitle.add(item1.getTitle());
         }
-
 
         ArrayAdapter arrayAdapter = new ArrayAdapter(DashBoard.getAppContext(), android.R.layout.simple_list_item_1, itemTitle);
         listView.setAdapter(arrayAdapter);

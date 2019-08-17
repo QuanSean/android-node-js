@@ -2,36 +2,25 @@ package com.huypo.tase.Activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.support.v7.widget.CardView;
-import android.text.Layout;
-import android.util.AttributeSet;
-import android.util.Log;
-import android.view.GestureDetector;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.JsonObject;
 import com.huypo.tase.Adapter.CardItemString;
 import com.huypo.tase.Adapter.CardPagerAdapterS;
 import com.huypo.tase.Adapter.ItemTaskAdapter;
 import com.huypo.tase.Model.Item;
 import com.huypo.tase.Model.PersonalTable;
 import com.huypo.tase.Model.Task;
-import com.huypo.tase.Model.User;
 import com.huypo.tase.R;
 import com.huypo.tase.Retrofit.IMyService;
 import com.huypo.tase.Retrofit.RetrofitClient;
@@ -40,12 +29,9 @@ import com.huypo.tase.Utils.ShadowTranformer;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Locale;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -59,11 +45,12 @@ public class DashBoard extends AppCompatActivity {
     IMyService iMyService;
 
     private ViewPager mViewPager;
-
     private CardPagerAdapterS mCardAdapter;
     private ShadowTranformer mCardShadowTransformer;
     String idProject="";
     String token="";
+    String titleProject="";
+
     ItemTaskAdapter itemTaskAdapter;
 
     ArrayList<String> arrayListItemTask;
@@ -95,29 +82,36 @@ public class DashBoard extends AppCompatActivity {
         PersonalTable personalTable = (PersonalTable) bundle.getSerializable("Info");
         arrayListItemTask= new ArrayList<>();
         idProject=personalTable.getIdProject();
+         titleProject=personalTable.getTitle();
         token=personalTable.getToken();
         mViewPager = (ViewPager) findViewById(R.id.viewPager);
         mCardAdapter = new CardPagerAdapterS();
 
+        FloatingActionButton btnNewTask = (FloatingActionButton) findViewById(R.id.btnNewTask) ;
+        if (titleProject.equals(""))
+        {
+            btnNewTask.setAlpha(0f);
+//            Toast.makeText(DashBoard.this,"true", Toast.LENGTH_SHORT).show();
+
+        }
 
 
-        compositeDisposable.add(iMyService.showListTask(personalTable.getToken(), personalTable.getIdProject())
-                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
+
+
+
+
+//        compositeDisposable.add(iMyService.showListTask(personalTable.getToken(), personalTable.getIdProject())
+                compositeDisposable.add(iMyService.showListTask(personalTable.getIdProject())
+
+                        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
                         new Consumer<String>() {
                             @Override
                             public void accept(String reponse) throws Exception {
 
                                 JSONObject jsonObject = new JSONObject(reponse);
-//                                idProject=jsonObject.getString("_id");
-//                                Toast.makeText(DashBoard.this,reponse, Toast.LENGTH_SHORT).show();
-
                                 JSONArray  detail= jsonObject.getJSONArray("detail");
                                 ArrayList<Task> arrayListTask = new ArrayList<>();
                                 ArrayList<Item> arrayListItem = new ArrayList<>();
-
-
-
-
                                     for (int i=0;i<detail.length();i++)
                                     {
                                         JSONObject objectTask = detail.getJSONObject(i);
@@ -126,8 +120,6 @@ public class DashBoard extends AppCompatActivity {
                                         if (taskArray.length()==0){
                                             TextView a=(TextView) findViewById(R.id.tvTask);
                                             a.setText("Quản lí dự án tốt hơn bằng cách hãy tạo công việc mới");
-
-
                                         }
                                         else
                                         {
@@ -146,7 +138,6 @@ public class DashBoard extends AppCompatActivity {
 
                                                 if (objectJSONArrayItem.length()==0)
                                                 {
-
                                                 }
                                                 else
                                                 {
@@ -201,7 +192,6 @@ public class DashBoard extends AppCompatActivity {
                                 mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                                     @Override
                                     public void onPageScrolled(int i, float v, int i1) {
-
                                     }
 
                                     @Override
@@ -218,6 +208,7 @@ public class DashBoard extends AppCompatActivity {
                 ));
 
     }
+    private String name;
     public static Context getAppContext() {
         return DashBoard.context;
     }
@@ -250,6 +241,36 @@ public class DashBoard extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
+                if (titleProject.equals(""))
+                {
+                    compositeDisposable.add( iMyService.getNameUser(token)
+                            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
+                                    new Consumer<String>() {
+                                        @Override
+                                        public void accept(String reponse) throws Exception
+                                        {
+                                            JSONObject jsonObject = new JSONObject(reponse);
+                                            name = jsonObject.getString("name");
+                                            Toast.makeText(DashBoard.this,name, Toast.LENGTH_SHORT).show();
+
+
+                                        }
+                                    }
+                            ));
+
+//            Toast.makeText(DashBoard.this,"true", Toast.LENGTH_SHORT).show();
+
+                }
+                else
+                {
+                    name="master";
+                    Toast.makeText(DashBoard.this,name, Toast.LENGTH_SHORT).show();
+
+                }
+
+
+//                Toast.makeText(DashBoard.this,token, Toast.LENGTH_SHORT).show();
+
 
                 if (editCreateTask.getText().toString().matches(""))
                 {
@@ -257,14 +278,13 @@ public class DashBoard extends AppCompatActivity {
                 }
                 else
                 {
-                    compositeDisposable.add( iMyService.addItemTask(token,editCreateTask.getText().toString(),idProject,demo.getIdTask())
+                    String i=editCreateTask.getText().toString()+ " ("+name+")";
+                    compositeDisposable.add( iMyService.addItemTask(token,i,idProject,demo.getIdTask())
                             .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
                                     new Consumer<String>() {
                                         @Override
                                         public void accept(String reponse) throws Exception
                                         {
-
-
                                         }
                                     }
                             ));
@@ -272,17 +292,10 @@ public class DashBoard extends AppCompatActivity {
                     finish();
                     startActivity(intent);
                 }
-
-
-
             }
         });
         alert.show();
-
-
     }
-
-
     public void btnCreateTask(View view){
         final AlertDialog.Builder alert = new AlertDialog.Builder(DashBoard.this);
         View viewtable = getLayoutInflater().inflate(R.layout.create_task,null);
@@ -291,8 +304,6 @@ public class DashBoard extends AppCompatActivity {
 //        Button btn_cancel = (Button)viewtable.findViewById(R.id.btnCancel);
         Button btn_create = (Button)viewtable.findViewById(R.id.btnCreateTask);
         final EditText editCreateTask = (EditText) viewtable.findViewById(R.id.editCreateTask);
-
-
         alert.setView(viewtable);
 
         final AlertDialog alertDialog = alert.create();
@@ -309,29 +320,26 @@ public class DashBoard extends AppCompatActivity {
                 }
                 else
                 {
+//                    Toast.makeText(DashBoard.this,token, Toast.LENGTH_SHORT).show();
+
+
                     compositeDisposable.add( iMyService.addTask(token,idProject,editCreateTask.getText().toString(),"2018/01/01")
-                            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
-                                    new Consumer<String>() {
-                                        @Override
-                                        public void accept(String reponse) throws Exception
-                                        {
-
-
-                                        }
+                        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
+                                new Consumer<String>() {
+                                    @Override
+                                    public void accept(String reponse) throws Exception
+                                    {
                                     }
-                            ));
+                                }
+                        ));
                     Intent intent = getIntent();
                     finish();
                     startActivity(intent);
 
                 }
-
-
-
             }
         });
         alert.show();
     }
-    
 }
 

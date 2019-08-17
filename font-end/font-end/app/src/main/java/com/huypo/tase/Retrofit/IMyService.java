@@ -24,6 +24,12 @@ public interface IMyService {
                                     @Field("password") String password,
                                     @Field("name") String name);
 
+    @POST ("/user/name")
+    @Headers({
+            "Accept:application/json"
+    })
+    Observable<String> getNameUser(@Header("token") String token);
+
     @POST ("/project")
     @FormUrlEncoded
     Observable<String> createProject(@Header("token") String token,@Field("title") String title,
@@ -37,9 +43,13 @@ public interface IMyService {
     @FormUrlEncoded
     Observable<String> changeStatusDoneProject(@Header("token") String token,@Field("id") String id);
 
-    @POST("/project/task/list")
+//    @POST("/project/task/list")
+//    @FormUrlEncoded
+//    Observable<String> showListTask(@Header("token") String token,@Field("id") String id);
+
+    @POST("/project/tasks")
     @FormUrlEncoded
-    Observable<String> showListTask(@Header("token") String token,@Field("id") String id);
+    Observable<String> showListTask(@Field("id") String id);
 
     @POST("/project/task")
     @FormUrlEncoded

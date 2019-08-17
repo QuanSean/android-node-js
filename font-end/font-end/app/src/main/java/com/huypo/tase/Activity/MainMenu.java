@@ -139,6 +139,7 @@ public class MainMenu extends AppCompatActivity {
                                 @RequiresApi(api = Build.VERSION_CODES.O)
                                 @Override
                                 public void onClick(View v) {
+
                                     Intent intent = new Intent(MainMenu.this, DashBoard.class);
                                     Bundle bundle= new Bundle();
                                     bundle.putSerializable("Info", p);

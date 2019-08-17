@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.huypo.tase.Adapter.ItemProjectPartner;
+import com.huypo.tase.Model.PersonalTable;
 import com.huypo.tase.Model.Project_Partner;
 import com.huypo.tase.R;
 import com.huypo.tase.Retrofit.IMyService;
@@ -83,8 +84,27 @@ public class project_partner extends AppCompatActivity {
 
                 button.setBackgroundColor(Color.TRANSPARENT);
                 Button btnDeletePr = (Button)viewtable.findViewById(R.id.btnDeletePr);
+                Button btnShowProject = (Button)viewtable.findViewById(R.id.btnShowProject);
 
+                btnShowProject.setOnClickListener(new View.OnClickListener() {
 
+                    @RequiresApi(api = Build.VERSION_CODES.O)
+                    @Override
+                    public void onClick(View v) {
+                        Date d= new Date();
+                        PersonalTable personalTable = new PersonalTable("","",d,token,p.getIdProject(),"",false);
+                        Intent intent = new Intent(project_partner.this, DashBoard.class);
+                        Bundle bundle= new Bundle();
+                        bundle.putSerializable("Info", personalTable);
+                        intent.putExtra("Project", bundle);
+                        startActivity(intent);
+
+//                        String txtTableName, String txtTableDescription, Date txtTableDeadline, String token, String idProject, String title, Boolean done
+//                        Toast.makeText(project_partner.this, p.get_id(), Toast.LENGTH_SHORT).show();
+
+                    }
+
+                });
 
 
                 txtTitle.setText(p.getTitle());
