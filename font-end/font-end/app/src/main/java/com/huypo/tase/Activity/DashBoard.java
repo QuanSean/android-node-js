@@ -58,6 +58,7 @@ public class DashBoard extends AppCompatActivity {
 
     ArrayList<CardItemString> arrayList;
 
+    String name;
 
 
 
@@ -94,11 +95,30 @@ public class DashBoard extends AppCompatActivity {
 //            Toast.makeText(DashBoard.this,"true", Toast.LENGTH_SHORT).show();
 
         }
+        else {}
+
+        if (titleProject.equals(""))
+        {
+            compositeDisposable.add( iMyService.getNameUser(token)
+                    .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
+                            new Consumer<String>() {
+                                @Override
+                                public void accept(String reponse) throws Exception
+                                {
+                                    JSONObject jsonObject = new JSONObject(reponse);
+                                    name = jsonObject.getString("name");
+                                }
+                            }
+                    ));
+
+        }
 
 
+        else
+        {
+            name="master";
 
-
-
+        }
 
 //        compositeDisposable.add(iMyService.showListTask(personalTable.getToken(), personalTable.getIdProject())
                 compositeDisposable.add(iMyService.showListTask(personalTable.getIdProject())
@@ -208,12 +228,12 @@ public class DashBoard extends AppCompatActivity {
                 ));
 
     }
-    private String name;
     public static Context getAppContext() {
         return DashBoard.context;
     }
     public void btnCreateItem(View view)
     {
+
         final AlertDialog.Builder alert = new AlertDialog.Builder(DashBoard.this);
         View viewtable = getLayoutInflater().inflate(R.layout.create_item_task,null);
 
@@ -241,35 +261,7 @@ public class DashBoard extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
-                if (titleProject.equals(""))
-                {
-                    compositeDisposable.add( iMyService.getNameUser(token)
-                            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
-                                    new Consumer<String>() {
-                                        @Override
-                                        public void accept(String reponse) throws Exception
-                                        {
-                                            JSONObject jsonObject = new JSONObject(reponse);
-                                            name = jsonObject.getString("name");
-                                            Toast.makeText(DashBoard.this,name, Toast.LENGTH_SHORT).show();
 
-
-                                        }
-                                    }
-                            ));
-
-//            Toast.makeText(DashBoard.this,"true", Toast.LENGTH_SHORT).show();
-
-                }
-                else
-                {
-                    name="master";
-                    Toast.makeText(DashBoard.this,name, Toast.LENGTH_SHORT).show();
-
-                }
-
-
-//                Toast.makeText(DashBoard.this,token, Toast.LENGTH_SHORT).show();
 
 
                 if (editCreateTask.getText().toString().matches(""))
@@ -278,8 +270,9 @@ public class DashBoard extends AppCompatActivity {
                 }
                 else
                 {
+
                     String i=editCreateTask.getText().toString()+ " ("+name+")";
-                    compositeDisposable.add( iMyService.addItemTask(token,i,idProject,demo.getIdTask())
+                    compositeDisposable.add( iMyService.addItemTask(i,idProject,demo.getIdTask())
                             .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
                                     new Consumer<String>() {
                                         @Override
@@ -288,6 +281,7 @@ public class DashBoard extends AppCompatActivity {
                                         }
                                     }
                             ));
+//                    sendEmail();
                     Intent intent = getIntent();
                     finish();
                     startActivity(intent);
@@ -296,6 +290,9 @@ public class DashBoard extends AppCompatActivity {
         });
         alert.show();
     }
+
+
+
     public void btnCreateTask(View view){
         final AlertDialog.Builder alert = new AlertDialog.Builder(DashBoard.this);
         View viewtable = getLayoutInflater().inflate(R.layout.create_task,null);

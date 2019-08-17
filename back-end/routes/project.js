@@ -279,6 +279,7 @@ router
       }
     })
   })
+  
   .get('/task/item',(req, res, next)=>{
     let newTask = req.body.newTask;
     Utility.verifyToken(req.headers.token, (err, user) => {
@@ -347,6 +348,8 @@ router
       }
     })
   })
+
+
   .post('/task/item', async (req, res, next)=>{
     Utility.verifyToken(req.headers.token, (err, user)=>{
         if (user){
