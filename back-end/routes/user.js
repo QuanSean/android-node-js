@@ -132,12 +132,10 @@ router
         user = user._doc;
         if (user) {
           UserModel.findById(user._id,(err, newUser)=>{
-            console.log(newUser)
             newUser.name = req.body.name;
             newUser.password = crypto.createHash('sha256').update(req.body.password).digest('hex');
             newUser.save();
-            console.log ("edited")
-            console.log (newUser)
+           
             res.status(200).json({result:true})
             
               
@@ -152,7 +150,21 @@ router
     }
 
   })
-  
+  .post("/name", (req,res)=>{
+    Utility.verifyToken(req.headers.token, (err, user) => {
+      if (user)
+      {
+        res.json({result:true,name:user.name})
+      }
+      else
+      {
+        res.status(401).send({
+          result: false
+        })
+      }
+    })
+
+  })
  
   .delete("/delete", (req, res, next) => {
     // user.deleteAccount(req.headers.token, (error, result) => {

@@ -75,6 +75,9 @@ public class MainMenu extends AppCompatActivity {
     private String token="";
     private String idPr="";
     int click=0;
+    User u;
+    String emailUser="";
+    String nameUser="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,7 +107,13 @@ public class MainMenu extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle bundle = intent.getBundleExtra("User");
         User user = (User) bundle.getSerializable("Info");
+        u=user;
+        nameUser=user.getName();
+        emailUser=user.getEmail();
         token=user.getToken();
+        Toast.makeText(MainMenu.this,nameUser + " " + emailUser, Toast.LENGTH_SHORT).show();
+
+
 
         listView.setOnItemClickListener( new AdapterView.OnItemClickListener() {
             @Override
@@ -188,9 +197,24 @@ public class MainMenu extends AppCompatActivity {
                                                                             try {
                                                                                 JSONObject jsonObject1= new JSONObject(jsonObject.getString("detail"));
                                                                                 Toast.makeText(MainMenu.this,"Đã thêm thành công", Toast.LENGTH_SHORT).show();
+
                                                                                 Intent intent = getIntent();
                                                                                 finish();
                                                                                 startActivity(intent);
+                                                                                compositeDisposable.add( iMyService.sendEmailProjectPartner(editEmailPartner.getText().toString(),p.getTitle(),nameUser
+                                                                                )
+                                                                                        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
+                                                                                                new Consumer<String>() {
+                                                                                                    @Override
+                                                                                                    public void accept(String reponse) throws Exception
+                                                                                                    {
+
+
+                                                                                                    }
+                                                                                                }
+                                                                                        ));
+
+
 
 
 
@@ -582,6 +606,15 @@ public class MainMenu extends AppCompatActivity {
                     intent.putExtra("token", token);
                     startActivity(intent);
                     return true;
+
+                case R.id.navigation_notification:
+                    Intent intent1= new Intent(MainMenu.this, MainMenu.class);
+                    Bundle bundle= new Bundle();
+
+                    bundle.putSerializable("Info",  u);
+                    intent1.putExtra("User", bundle);
+                    startActivity(intent1);
+                    finish();
 
             }
             return false;

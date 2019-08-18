@@ -27,8 +27,10 @@ import com.huypo.tase.Retrofit.RetrofitClient;
 import com.huypo.tase.Utils.ShadowTranformer;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -37,6 +39,9 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+import io.socket.client.IO;
+import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
 import retrofit2.Retrofit;
 
 
@@ -60,9 +65,22 @@ public class DashBoard extends AppCompatActivity {
 
     String name;
 
-
+    private Socket socket;
+    {
+        try {
+            socket = IO.socket("http://172.16.8.4:2409/");
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+    }
 
     private static Context context;
+
+//    @Override
+//    public void onBackPressed()
+//    {
+//        super.onBackPressed();
+//    }
 
 
     @Override
@@ -75,6 +93,34 @@ public class DashBoard extends AppCompatActivity {
         arrayList= new ArrayList<>();
         //get activity for context
         DashBoard.context = getApplicationContext();
+
+        socket.connect();
+//        socket.on ("hello",onRetrieveData);
+
+        socket.on("n", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        JSONObject obj = (JSONObject)args[0];
+                        try {
+                            String n= obj.getString("noidung");
+                            Intent intent1 = getIntent();
+                            finish();
+                            startActivity(intent1);
+
+                        } catch (JSONException e) {
+                            Toast.makeText(DashBoard.this,"Err", Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
+
+
+            }
+        });
 
 
 
@@ -270,6 +316,7 @@ public class DashBoard extends AppCompatActivity {
                 }
                 else
                 {
+                    socket.emit("reset","reset");
 
                     String i=editCreateTask.getText().toString()+ " ("+name+")";
                     compositeDisposable.add( iMyService.addItemTask(i,idProject,demo.getIdTask())

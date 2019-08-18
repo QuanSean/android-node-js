@@ -3,7 +3,7 @@ let Schema = mongoose.Schema,
 ObjectId = Schema.ObjectId;
 const PostSchema= mongoose.Schema({
     id:ObjectId,
-    _idUser : ObjectId,
+    author : String,
     // client: [User.schema],
     title:String,
     description:String,

@@ -29,9 +29,11 @@ import com.huypo.tase.R;
 import com.huypo.tase.Retrofit.IMyService;
 import com.huypo.tase.Retrofit.RetrofitClient;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -42,11 +44,17 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+import io.socket.client.IO;
+import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
 import retrofit2.HttpException;
 import retrofit2.Retrofit;
 
 import static com.huypo.tase.Model.Validation.validateEmail;
 import static com.huypo.tase.Model.Validation.validateFields;
+
+//import io.socket.client.IO;
+//import io.socket.client.Socket;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -69,6 +77,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     IMyService iMyService;
 
 
+    private Socket socket;
+
+    {
+        try {
+            socket = IO.socket("http://172.16.8.4:2409/");
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     protected void onStop() {
         compositeDisposable.clear();
@@ -79,7 +97,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        socket.connect();
+//        socket.on ("hello",onRetrieveData);
 
+        socket.on("n", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        JSONObject obj = (JSONObject)args[0];
+                        try {
+                            String n= obj.getString("noidung");
+                            Toast.makeText(MainActivity.this,n, Toast.LENGTH_SHORT).show();
+
+                        } catch (JSONException e) {
+                            Toast.makeText(MainActivity.this,"Err", Toast.LENGTH_SHORT).show();
+
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
+
+
+            }
+        });
 //        mSocket.connect();
 
 
@@ -87,6 +130,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         initSharedPreferences();
         login();
     }
+
+
+
     private void initSharedPreferences() {
 
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -114,8 +160,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         btn_login = (Button) findViewById(R.id.btnLogin);
         btn_login.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
+//                socket.emit("aaa","Hello");
+
                 loginUser(edt_login_email.getText().toString(),
                         edt_login_password.getText().toString());
             }
@@ -214,7 +263,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         startActivity(intent);
 
     }
-
+//888091407597-43mdv7gh4jjaibe301adabdfp05dtspm.apps.googleusercontent.com
     private void handleError(Throwable error) {
 
 

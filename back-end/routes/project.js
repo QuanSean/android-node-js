@@ -5,6 +5,8 @@ const Project= require('../Controllers/Project');
 const Utility = require('../Common/utility.js')
 let crypto = require("crypto");
 const UserModel = require ('../Model/User');
+const projectPartnerModel=require('./../Model/Project_partner')
+const ProjectModel =require('./../Model/Project')
 router
 .get('/',(req, res)=>{
   console.log("ok");
@@ -188,7 +190,7 @@ router
   Utility.verifyToken(req.headers.token, (err, user) => {
     if (user)
     {
-      Project.addPartNer(req.body.id, req.body.email,(err,result)=>{
+      Project.addPartNer(req.body.id, req.body.email,user.name,(err,result)=>{
         if (err)
         {
           res.json ({result:false})
@@ -209,6 +211,88 @@ router
       });
     }
   })
+})
+
+.post('/partner/delete',(req,res)=>{
+  Utility.verifyToken(req.headers.token, (err, user) => {
+    if (user)
+    {
+      UserModel.findById(user._id,(err,result)=>{
+        if (result)
+        {
+          for (i=0;i<result.projectPartner.length;i++)
+          {
+            if (result.projectPartner[i]._id==req.body.id)
+            {
+              result.projectPartner[i].deleted=true;
+              result.save();
+              res.json({
+                result: true,
+                detail: result.projectPartner
+              });
+
+                break;
+            }
+           
+          }
+
+            
+        }
+        else
+        {
+          res.json({
+            result: false,
+            detail: "Query error"  
+          });
+        }
+
+
+      })
+      
+
+
+
+    }
+    else
+    {
+      res.status(401).send({
+        result: false,
+        detail: "UnAuthorized"
+      });
+    }
+    
+  })
+})
+.post('/partner/info',(req,res)=>{
+  Utility.verifyToken(req.headers.token, (err, user) => {
+    if (user)
+    {
+      Project.getInfoProjectPartner(req.body.id,(err, result)=>{
+        if (err)
+        {
+          res.json({
+            result: false,
+            detail: "Query error"  
+          });
+        }
+        else
+        {
+          res.json({
+            result:true,
+            detail:result
+          })
+        }
+      })
+    }
+    else
+    {
+      res.status(401).send({
+        result: false,
+        detail: "UnAuthorized"
+      });
+    }
+  })
+
 })
   .post("/task", async (req, res, next) => {
    
@@ -279,7 +363,22 @@ router
       }
     })
   })
-  
+  .post ('/tasks',(req,res,next)=>{
+    ProjectModel.findById(req.body.id,(err, result)=>{
+      if (result)
+      {
+        console.log (result)
+        res.json({detail:[result]})
+      }
+      else
+      {
+        res.json({
+          result: false,
+          detail: "query error"
+        });
+      }
+    })
+  })
   .get('/task/item',(req, res, next)=>{
     let newTask = req.body.newTask;
     Utility.verifyToken(req.headers.token, (err, user) => {
@@ -348,8 +447,25 @@ router
       }
     })
   })
-
-
+  .post('/task/additem',async (req,res, next)=>{
+    
+      Project.addItemTasks(req.body.title,req.body.idTask,req.body.idProject, (err, result)=>{
+        if (err)
+        {
+          res.status(404).json({
+            result: false,
+            detail: "query error"
+          });
+        }
+        else{
+          res.status(200).json({
+            result: true,
+            detail: "s"
+          });
+        }
+      })
+   
+  })
   .post('/task/item', async (req, res, next)=>{
     Utility.verifyToken(req.headers.token, (err, user)=>{
         if (user){

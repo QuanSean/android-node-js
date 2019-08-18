@@ -113,8 +113,32 @@ let project={
           }
         })
 
-      },      
-      addPartNer:( idProject,email,callback)=>{
+      }, 
+      addItemTasks:(title, idTask, idProject, callback)=>{
+        projectModel.findById (idProject,(err, fProject)=>{
+          
+            if (fProject)
+            {
+              let newItem= new item ({
+                _id: fProject.task[idTask-1].item.length+1,
+                title:title,
+                done:false,
+                deleted:false});
+                console.log ("nwe"+newItem);
+                fProject.task[idTask-1].item.push(newItem)
+                fProject.save()
+              .then(res => callback(null, res))
+              .catch(err => callback(err, null));
+            }
+            else
+            {
+              callback(true,null)
+            }
+          
+        })
+
+      },     
+      addPartNer:( idProject,email,author,callback)=>{
         projectModel.findById( idProject,(err,result)=>{
           if (err)
           {
@@ -133,7 +157,7 @@ let project={
                   {
                     pppp = new projectPartnerModel ({
                       id:result._id,
-                      _idUser : result._idUser,
+                      author : author,
                       // client: [User.schema],
                       title:result.title,
                       description:result.description,
@@ -141,6 +165,8 @@ let project={
                       done:result.done,
                       deleted: result.deleted,
                     })
+
+                    console.log (pppp)
   
                     resultUser[0].projectPartner.push(pppp);
                     
@@ -148,7 +174,7 @@ let project={
                       .then(res => callback(null, res))
                       .catch(err => callback(err, null));
                   }
-
+                  
                 }
                 else
                 {
@@ -170,6 +196,18 @@ let project={
         //   }
         // })
       }, 
+      getInfoProjectPartner:(id,callback)=>{
+        projectModel.findOne({_id:id},(err,result)=>{
+          if (err)
+          {
+            callback(true,null)
+          }
+          else
+          {
+            callback(false,result)
+          }
+        })
+      },
       getProjectPartner:(idUser,callback)=>{
         userModel.findById(idUser,(err,result)=>{
           if (err)
