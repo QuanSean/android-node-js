@@ -11,14 +11,14 @@
         android:layout_height="wrap_content"
         android:id="@+id/txtTitle"
         android:textSize="22sp"
-        android:text="CREATE TABLE"
+        android:text="TẠO CÔNG VIỆC"
         android:textStyle="bold"
         android:textColor="#000"/>
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Table name"
+        android:hint="Tên công việc"
         android:layout_marginTop="15dp"
         android:inputType="text"
         android:id="@+id/editCreateTask"
@@ -39,20 +39,10 @@
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:background="@color/colorWhite"
-            android:text="New table"
+            android:text="Tạo công việc"
             android:textColor="@color/colorAccent"
             android:layout_alignParentEnd="true"
             />
-
-        <!--<Button-->
-        <!--android:id="@+id/btnCancel"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:padding="10dp"-->
-        <!--android:background="@color/colorWhite"-->
-        <!--android:text="@string/Cancel"-->
-        <!--android:textColor="@color/colorAccent"-->
-        <!--android:layout_toStartOf="@+id/btnNewTable"/>-->
     </RelativeLayout>
 
 </LinearLayout>

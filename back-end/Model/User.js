@@ -8,7 +8,8 @@ const PostSchema = mongoose.Schema({
     password: String,
     name: String,
     deleted: Boolean,
-    projectPartner:[pr.schema]
+    projectPartner:[pr.schema],
+    key_repass:String
 
 });
 

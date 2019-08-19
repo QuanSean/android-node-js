@@ -150,6 +150,42 @@ router
     }
 
   })
+  .post('/key',(req,res)=>{
+    user.createKeyRePass(req.body.email,(err,result)=>{
+      if (result)
+      {
+        res.json({
+          result:true,
+          detail:result
+        })
+      }
+      else
+      {
+        res.json({
+          result: false,
+          detail: "Query error"
+        });
+      }
+    })
+  })
+  .post('/changePassword',(req, res,next)=>{
+    user.changePassword(req.body.email, req.body.key, req.body.pass,(err,result)=>{
+      if (err)
+      {
+        res.json({
+          result: false,
+          detail: "Query error"
+        });
+      }
+      else
+      {
+        res.json({
+          result:true,
+          detail:result
+        })
+      }
+    })
+  })
   .post("/name", (req,res)=>{
     Utility.verifyToken(req.headers.token, (err, user) => {
       if (user)

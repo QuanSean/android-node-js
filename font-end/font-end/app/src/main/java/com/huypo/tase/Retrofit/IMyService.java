@@ -55,6 +55,14 @@ public interface IMyService {
     @FormUrlEncoded
     Observable<String> sendEmailProjectPartner(@Field("email") String email,@Field("title") String title,@Field("username") String username);
 
+    @POST("/user/key")
+    @FormUrlEncoded
+    Observable<String> sendEmailChangePassword(@Field("email") String email);
+
+    @POST("/user/changePassword")
+    @FormUrlEncoded
+    Observable<String> changePassword(@Field("email") String email,@Field("key") String key,@Field("pass") String pass);
+
     @POST("/project/task")
     @FormUrlEncoded
     Observable<String> addTask(@Header("token") String token, @Field("id") String id, @Field("title") String title,@Field("deadline") String deadline);

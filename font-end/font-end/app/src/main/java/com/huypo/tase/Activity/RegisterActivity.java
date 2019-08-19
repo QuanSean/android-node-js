@@ -1,11 +1,10 @@
 package com.huypo.tase.Activity;
 
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
@@ -13,15 +12,14 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
-import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
 
-import com.huypo.tase.Model.User;
 import com.huypo.tase.R;
 import com.huypo.tase.Retrofit.IMyService;
 import com.huypo.tase.Retrofit.RetrofitClient;
 
-import org.json.JSONObject;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -60,12 +58,23 @@ public class RegisterActivity extends AppCompatActivity {
         edt_register_name = (EditText)findViewById(R.id.editName);
         edt_register_password = (EditText)findViewById(R.id.editPass);
         btnRegister = (Button)findViewById(R.id.btnRegister);
+
         btnRegister.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                registerUser(edt_register_email.getText().toString(),
-                        edt_register_name.getText().toString(),
-                        edt_register_password.getText().toString());
+                if (isEmailValid(edt_register_email.getText().toString())==false)
+                {
+                    Toast.makeText(RegisterActivity.this,"Vui lòng nhập đúng email",Toast.LENGTH_LONG).show();
+
+                }
+                else
+                {
+                    registerUser(edt_register_email.getText().toString(),
+                            edt_register_name.getText().toString(),
+                            edt_register_password.getText().toString());
+                }
+
+
             }
         });
 //        btnRegister.setOnClickListener(new View.OnClickListener(){
@@ -123,6 +132,26 @@ public class RegisterActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+    public boolean isEmailValid(String email)
+    {
+        String regExpn =
+                "^(([\\w-]+\\.)+[\\w-]+|([a-zA-Z]{1}|[\\w-]{2,}))@"
+                        +"((([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?"
+                        +"[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\."
+                        +"([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?"
+                        +"[0-9]{1,2}|25[0-5]|2[0-4][0-9])){1}|"
+                        +"([a-zA-Z]+[\\w-]+\\.)+[a-zA-Z]{2,4})$";
+
+        CharSequence inputStr = email;
+
+        Pattern pattern = Pattern.compile(regExpn,Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(inputStr);
+
+        if(matcher.matches())
+            return true;
+        else
+            return false;
     }
 
     private void registerUser(String email, String name, String password) {

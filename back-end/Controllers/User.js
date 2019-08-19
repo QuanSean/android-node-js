@@ -4,6 +4,8 @@ const User = require ('../Model/User');
 const Project= require('../Model/Project');
 const Utility= require ('../Common/utility');
 let crypto = require("crypto");
+var nodemailer = require('nodemailer');
+
 
 let isExistEmail = (email) => {
     return new Promise((resolve, reject) => {
@@ -35,7 +37,8 @@ let isExistEmail = (email) => {
           name: name,
           password: password,
           deleted: false,
-          token:''
+          token:'',
+          key_repass:''
         });
         newUser.save()
           .then(res => callback(null, res))
@@ -63,6 +66,100 @@ let isExistEmail = (email) => {
         } else {
           callback(err, null);
         }
+      })
+    },
+    createKeyRePass: async(email,callback)=>{
+      User.findOne({email:email},(err, result)=>{
+        if (err)
+        {
+          callback(true, null)
+        }
+        else
+        {
+
+
+          if (result==null)
+          {
+            callback(true, null)
+          }
+          else
+          {
+            var x = Math.floor(Math.random() * 100)*12;
+            if (x==0)
+            {
+              x=3485;
+            }
+            if (x<100)
+            {
+              x=x*120;
+            }
+            else
+            {
+              if (x<1000)
+                {
+                  x=x*12
+                }
+              
+            }
+            var transporter = nodemailer.createTransport({
+              service: 'gmail',
+              auth: {
+                user: 'tase.app@gmail.com',
+                pass: '150598bd'
+              }
+            });
+            
+            var mailOptions = {
+              from: 'tase.app@gmail.com',
+              to: email,
+              subject: 'TASE - Yêu cầu thay đổi mật khẩu',
+              html: '<h2>Chào quý khách</h2><p>TASE dã nhận được yêu cầu thay đổi mật khẩu của quý khách.</p><p>Key thay đổi mật khẩu của bạn là: </p><h3>'+x+'</h3><h3>Thanks & B. Regards, TASE(Ms)</h3> <p>==================</p> <p>Address: HUTECH.</p> <p>Tell: 0989837xxx Email: TASE.APP@gmail.com</p>'
+          
+            };
+            transporter.sendMail(mailOptions, function(error, info){
+              if (error) {
+                res.json ({result:false})
+                console.log('Email sent: ' +error);
+          
+          
+              } else {
+                console.log('Email sent: ' + info.response);
+                res.json ({result:true,detail:info.response})
+          
+              }
+            });
+            result.key_repass=x;
+            result.save()
+            .then(res => callback(null, res))
+            .catch(err => callback(err, null));
+
+          }
+        }
+      })
+    },
+    changePassword:(email, key, pass, callback)=>{
+      User.findOne({email:email,key_repass:key},(err,result)=>{
+        if (err)
+        {
+          callback(true, null)
+        }
+        else
+        {
+          if (result==null)
+          {
+            callback(true,null)
+          }
+          else
+          {
+            pass = crypto.createHash('sha256').update(pass).digest('hex');
+            result.password=pass
+            result.save()
+            .then(res => callback(null, res))
+            .catch(err => callback(err, null));
+
+          }
+        }
+
       })
     },
     logout: async (token, callback) => {

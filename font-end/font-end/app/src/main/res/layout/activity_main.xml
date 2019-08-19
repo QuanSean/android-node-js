@@ -25,7 +25,7 @@
         android:layout_marginTop="40dp"
         android:layout_marginStart="30dp"
         android:textSize="17sp"
-        android:text="@string/welcome"
+        android:text="Chào mừng đến với TASE"
         android:textColor="@color/colorWhite"/>
 
     <TextView
@@ -37,7 +37,7 @@
         android:layout_below="@+id/txtTitle"
         android:layout_alignStart="@+id/txtTitle"
         android:textSize="30sp"
-        android:text="@string/login"
+        android:text="Đăng nhập"
         android:textColor="@color/colorWhite"/>
 
     <ImageView
@@ -118,7 +118,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/Password"
+                        android:text="Mật khẩu"
                         android:textSize="14sp"
                         android:layout_margin="15dp"
                         android:textColor="@color/colorPurple"
@@ -169,11 +169,24 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:elevation="10dp"
-                    android:text="@string/login"
+                    android:text="Đăng nhập"
                     android:textAllCaps="false"
                     android:textColor="@color/colorWhite"
                     android:background="@drawable/bg_ui"/>
             </RelativeLayout>
+            <Button
+                android:id="@+id/changePass"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:elevation="5dp"
+                android:layout_marginTop="20dp"
+                android:text="Quên mật khẩu?"
+                android:textAllCaps="false"
+                android:textSize="14sp"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/cardView"
+                android:textColor="#2460a0"
+                />
 
 
             <TextView
@@ -185,7 +198,7 @@
                 android:textAllCaps="false"
                 android:textSize="14sp"
                 android:layout_centerHorizontal="true"
-                android:layout_below="@+id/cardView"/>
+                android:layout_below="@+id/changePass"/>
 
         </RelativeLayout>
     </ScrollView>

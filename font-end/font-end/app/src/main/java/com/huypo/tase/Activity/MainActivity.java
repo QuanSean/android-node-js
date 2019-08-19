@@ -3,10 +3,12 @@ package com.huypo.tase.Activity;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.RequiresApi;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Pair;
 import android.view.View;
@@ -123,6 +125,132 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             }
         });
+
+        Button btnChangePassword= (Button) findViewById(R.id.changePass) ;
+        btnChangePassword.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                final AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
+                View viewtable = getLayoutInflater().inflate(R.layout.changepass_dialog,null);
+
+                Button btnChangePassword = (Button)viewtable.findViewById(R.id.btnChangePassWord);
+                Button btnEmail = (Button)viewtable.findViewById(R.id.btnEmail);
+
+                final EditText editEmail = (EditText) viewtable.findViewById(R.id.editEmail);
+                final EditText editKey = (EditText) viewtable.findViewById(R.id.editKey);
+                final EditText editPassword = (EditText) viewtable.findViewById(R.id.editPassword);
+
+
+                btnEmail.setOnClickListener(new View.OnClickListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.O)
+                    @Override
+                    public void onClick(View v) {
+                        compositeDisposable.add( iMyService.sendEmailChangePassword(editEmail.getText().toString())
+                                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
+                                        new Consumer<String>() {
+                                            @Override
+                                            public void accept(String reponse) throws Exception
+                                            {
+                                                JSONObject jsonObject= new JSONObject(reponse);
+                                                Boolean result  = new Boolean(jsonObject.getString("result"));
+
+                                                if (result==false)
+                                                {
+                                                    Toast.makeText(MainActivity.this,"Vui lòng nhập đúng email để thay đổi mật khẩu", Toast.LENGTH_SHORT).show();
+
+                                                }
+                                                else
+                                                {
+                                                    Toast.makeText(MainActivity.this,"Mã xác nhận đã được gửi vào email của bạn", Toast.LENGTH_SHORT).show();
+                                                    btnEmail.setOnClickListener(null);
+                                                    btnEmail.setTextColor(Color.GRAY);
+//                                                    D81B60
+                                                    btnChangePassword.setVisibility(View.VISIBLE);
+                                                    editKey.setVisibility(View.VISIBLE);
+                                                    editPassword.setVisibility(View.VISIBLE);
+                                                    btnChangePassword.setOnClickListener(new View.OnClickListener() {
+                                                        @RequiresApi(api = Build.VERSION_CODES.O)
+                                                        @Override
+                                                        public void onClick(View v) {
+
+                                                            if (editKey.getText().toString().matches("")||editPassword.getText().toString().matches(""))
+                                                            {
+                                                                Toast.makeText(MainActivity.this,"Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
+
+                                                            }
+                                                            else
+                                                            {
+                                                                compositeDisposable.add( iMyService.changePassword(editEmail.getText().toString(),editKey.getText().toString(),editPassword.getText().toString())
+                                                                        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
+                                                                                new Consumer<String>() {
+                                                                                    @Override
+                                                                                    public void accept(String reponse) throws Exception
+                                                                                    {
+                                                                                        JSONObject jsonObject= new JSONObject(reponse);
+                                                                                        Boolean result  = new Boolean(jsonObject.getString("result"));
+                                                                                        if (result==false)
+                                                                                        {
+                                                                                            Toast.makeText(MainActivity.this,"Vui lòng nhập đúng thông tin", Toast.LENGTH_SHORT).show();
+
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            Toast.makeText(MainActivity.this,"Bạn đã thay đổi mật khẩu thành công", Toast.LENGTH_SHORT).show();
+                                                                                            Intent intent = getIntent();
+                                                                                            finish();
+                                                                                            startActivity(intent);
+
+                                                                                        }
+
+
+
+                                                                                    }
+                                                                                }
+                                                                        ));
+                                                            }
+
+                                                        }
+                                                    });
+
+
+
+
+
+
+
+                                                }
+
+//
+
+
+                                            }
+                                        }
+                                ));
+
+
+//                Toast.makeText(MainMenu.this,editProjectName.getText().toString(), Toast.LENGTH_SHORT).show();
+
+
+
+
+                    }
+                });
+
+                alert.setView(viewtable);
+
+                final AlertDialog alertDialog = alert.create();
+                alertDialog.setCanceledOnTouchOutside(false);
+
+                alert.show();
+
+
+            }
+        });
+//        View viewtable = getLayoutInflater().inflate(R.layout.changepass_dialog,null);
+
+
+
 //        mSocket.connect();
 
 
