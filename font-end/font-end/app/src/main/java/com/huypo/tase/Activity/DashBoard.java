@@ -68,19 +68,13 @@ public class DashBoard extends AppCompatActivity {
     private Socket socket;
     {
         try {
-            socket = IO.socket("http://172.16.8.4:2409/");
+            socket = IO.socket("https://tase-nodejs.herokuapp.com/");
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
     }
 
     private static Context context;
-
-//    @Override
-//    public void onBackPressed()
-//    {
-//        super.onBackPressed();
-//    }
 
 
     @Override
@@ -92,11 +86,9 @@ public class DashBoard extends AppCompatActivity {
         iMyService = retrofitClient.create(IMyService.class);
         arrayList= new ArrayList<>();
         //get activity for context
-        DashBoard.context = getApplicationContext();
+        DashBoard.context = getApplicationContext() ;
 
         socket.connect();
-//        socket.on ("hello",onRetrieveData);
-
         socket.on("n", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
@@ -109,7 +101,6 @@ public class DashBoard extends AppCompatActivity {
                             Intent intent1 = getIntent();
                             finish();
                             startActivity(intent1);
-
                         } catch (JSONException e) {
                             Toast.makeText(DashBoard.this,"Err", Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
@@ -121,8 +112,6 @@ public class DashBoard extends AppCompatActivity {
 
             }
         });
-
-
 
         Intent intent = getIntent();
         Bundle bundle = intent.getBundleExtra("Project");
@@ -385,5 +374,7 @@ public class DashBoard extends AppCompatActivity {
         });
         alert.show();
     }
+
+
 }
 

@@ -1,5 +1,6 @@
 package com.huypo.tase.Activity;
 
+import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -20,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -558,7 +560,7 @@ public class MainMenu extends AppCompatActivity {
                                             }
                                             else
                                             {
-                                                if (year==yearNow&&month==monthNow&&day-1>=dayNow)
+                                                if (year==yearNow&&month==monthNow&&day-1<=dayNow)
                                                 {
                                                     Toast.makeText(MainMenu.this,"true", Toast.LENGTH_SHORT).show();
                                                     row.setBackgroundColor (Color.rgb(204,0,102));
@@ -620,6 +622,25 @@ public class MainMenu extends AppCompatActivity {
             return false;
         }
     };
+    public void chooseDeadline (EditText editText)
+    {
+        final Calendar calendar= Calendar.getInstance();
+        int d = calendar.get(Calendar.DATE);
+        int m = calendar.get(Calendar.MONTH);
+        int y = calendar.get(Calendar.YEAR);
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                calendar.set(year,month,dayOfMonth);
+                SimpleDateFormat simpleDateFormat=new SimpleDateFormat("dd/MM/yyyy");
+                editText.setText(simpleDateFormat.format(calendar.getTime()));
+            }
+        },y,m,d);
+        datePickerDialog.show();
+
+    }
+
+
     public void btnNewTable(View view){
         final AlertDialog.Builder alert = new AlertDialog.Builder(MainMenu.this);
         View viewtable = getLayoutInflater().inflate(R.layout.table_dialog,null);
@@ -630,6 +651,13 @@ public class MainMenu extends AppCompatActivity {
         final EditText editProjectName = (EditText) viewtable.findViewById(R.id.editProjectName);
         final EditText editTableDescription = (EditText) viewtable.findViewById(R.id.editTableDescription);
         final EditText editProjectDeadline = (EditText) viewtable.findViewById(R.id.editProjectDeadline);
+
+        editProjectDeadline.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chooseDeadline(editProjectDeadline);
+            }
+        });
 
 
 
